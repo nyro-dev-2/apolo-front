@@ -26,9 +26,10 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       <section className="relative overflow-hidden min-h-[750px] flex items-center">
-        <div className="absolute inset-0 bg-[url('/hero-dark-medical-technology.jpg')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/80 to-black/70" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-200 via-blue-100 to-blue-300" />
+        <div className="absolute inset-0 bg-[url('/hero-dark-medical-technology.jpg')] bg-cover bg-center opacity-15" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/50 to-white/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent" />
         <div className="container relative mx-auto px-4 py-24 md:py-32">
           <div className="mx-auto max-w-5xl text-center">
             <div className="mb-8 inline-block animate-fade-in">
@@ -93,7 +94,7 @@ export default function HomePage() {
 
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/advanced-neurosurgery-equipment.jpg')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/90 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/85 to-white/80" />
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
@@ -143,7 +144,7 @@ export default function HomePage() {
               </div>
               <div className="relative">
                 <div className="aspect-video rounded-xl overflow-hidden shadow-2xl shadow-primary/20 border border-primary/20">
-                  <div className="relative w-full h-full bg-black/50 flex items-center justify-center group cursor-pointer">
+                  <div className="relative w-full h-full bg-white/50 flex items-center justify-center group cursor-pointer">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-smooth" />
                     <Play className="h-20 w-20 text-primary group-hover:scale-110 transition-smooth" />
                   </div>
@@ -171,7 +172,7 @@ export default function HomePage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
             <Card className="overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-smooth group border-border/50 bg-card/50 backdrop-blur-sm">
               <div className="h-56 overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <img
                   src="/category-cranial-systems.jpg"
                   alt="Sistemas Craneales"
@@ -196,7 +197,7 @@ export default function HomePage() {
             </Card>
             <Card className="overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-smooth group border-border/50 bg-card/50 backdrop-blur-sm">
               <div className="h-56 overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <img
                   src="/category-spinal-implants.jpg"
                   alt="Implantes Espinales"
@@ -221,7 +222,7 @@ export default function HomePage() {
             </Card>
             <Card className="overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-smooth group border-border/50 bg-card/50 backdrop-blur-sm">
               <div className="h-56 overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <img
                   src="/category-neuroendoscopy.jpg"
                   alt="Neuroendoscopía"
@@ -250,7 +251,7 @@ export default function HomePage() {
 
       <section className="relative py-28 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/neurosurgery-medical-equipment-operating-room.jpg')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary/90 to-black/90" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/80 to-white/80" />
         <div className="container relative mx-auto px-4 text-center">
           <h2 className="mb-6 text-4xl font-bold md:text-5xl text-balance max-w-3xl mx-auto text-foreground">
             ¿Listo para Mejorar tus Procedimientos Quirúrgicos?

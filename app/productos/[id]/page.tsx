@@ -56,8 +56,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                         >
                           Tu navegador no soporta el elemento de video.
                         </video>
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <Play className="h-16 w-16 text-white" />
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                          <Play className="h-16 w-16 text-primary" />
                         </div>
                       </div>
                     </CardContent>

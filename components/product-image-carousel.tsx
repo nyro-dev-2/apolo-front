@@ -53,7 +53,7 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
           <Button
             variant="ghost"
             size="icon"
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white hover:bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/60 text-foreground hover:bg-white/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             onClick={goToPrevious}
           >
             <ChevronLeft className="h-6 w-6" />
@@ -61,7 +61,7 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white hover:bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/60 text-foreground hover:bg-white/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             onClick={goToNext}
           >
             <ChevronRight className="h-6 w-6" />

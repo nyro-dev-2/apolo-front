@@ -158,14 +158,14 @@ export default function NewsPage() {
                       alt={video.title}
                       className="h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute inset-0 bg-white/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="rounded-full bg-primary p-4">
                         <svg className="h-8 w-8 text-primary-foreground" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </div>
                     </div>
-                    <div className="absolute bottom-2 right-2 rounded bg-black/80 px-2 py-1 text-xs text-white">
+                    <div className="absolute bottom-2 right-2 rounded bg-white/80 px-2 py-1 text-xs text-foreground">
                       {video.duration}
                     </div>
                   </div>
