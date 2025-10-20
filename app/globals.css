@@ -210,6 +210,19 @@
       background-position: 1000px 0;
     }
   }
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+    will-change: transform;
+  }
 
   .animate-scroll {
     animation: scroll 30s linear infinite;

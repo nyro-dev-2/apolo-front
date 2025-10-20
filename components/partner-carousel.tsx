@@ -10,7 +10,6 @@ export function PartnerCarousel() {
     { name: "BONETECH", logo: "/logos/bonetech-logo.png" },
   ]
 
-
   // Duplicate for seamless loop
   const duplicatedPartners = [...partners, ...partners]
 
@@ -24,11 +23,11 @@ export function PartnerCarousel() {
       </div>
 
       <div className="relative">
-        <div className="flex animate-scroll">
+        <div className="flex w-max gap-16 animate-marquee">
           {duplicatedPartners.map((partner, index) => (
             <div
               key={`${partner.name}-${index}`}
-              className="flex-shrink-0 mx-8 w-48 h-32 flex flex-col items-center justify-center gap-3 bg-background rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6"
+              className="flex-shrink-0 w-48 h-32 flex flex-col items-center justify-center gap-3 bg-background rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6"
             >
               <div className="h-20 w-full flex items-center justify-center">
                 <img
