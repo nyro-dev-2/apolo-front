@@ -32,12 +32,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent" />
         <div className="container relative mx-auto px-4 py-24 md:py-32">
           <div className="mx-auto max-w-5xl text-center">
-            <div className="mb-8 inline-block animate-fade-in">
-              <span className="inline-flex items-center gap-2 rounded-full glass-effect px-5 py-2.5 text-sm font-semibold text-foreground border border-primary/30">
-                <Award className="h-4 w-4 text-primary" />
-                Certificación Internacional ISO & ASTM
-              </span>
-            </div>
+          
             <h1 className="mb-8 text-5xl font-serif font-bold leading-tight text-foreground md:text-6xl lg:text-7xl text-balance animate-fade-in">
               Innovación y Confianza en <span className="text-primary text-[1.1em]">Soluciones Médicas</span> Avanzadas
             </h1>

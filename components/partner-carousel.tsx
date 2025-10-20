@@ -1,12 +1,13 @@
 "use client"
 
+//Socios Deseados ENCAC, PRODORTH, SCIENCE MEDIC, HC BIOLOGICS, BONETECH.
 export function PartnerCarousel() {
   const partners = [
-    { name: "AESCULAP", logo: "/logos/aesculap-logo.jpg" },
-    { name: "ENDAC", logo: "/logos/endac-logo.jpg" },
-    { name: "PRODORTH", logo: "/logos/prodorth-logo.jpg" },
-    { name: "BONEGRAFT", logo: "/logos/bonegraft-logo.jpg" },
+    { name: "ENDAC", logo: "/logos/endac-logo.png" },
+    { name: "PRODORTH", logo: "/logos/prodorth-logo.png" },
     { name: "SCIENCEMEDIC", logo: "/logos/sciencemedic-logo.jpg" },
+    { name: "HC BIOLOGICS", logo: "/logos/hcbiologics_logo.jpg" },
+    { name: "BONETECH", logo: "/logos/bonetech-logo.png" },
   ]
 
   // Duplicate for seamless loop
@@ -22,17 +23,17 @@ export function PartnerCarousel() {
       </div>
 
       <div className="relative">
-        <div className="flex animate-scroll">
+        <div className="flex w-max gap-16 animate-marquee">
           {duplicatedPartners.map((partner, index) => (
             <div
               key={`${partner.name}-${index}`}
-              className="flex-shrink-0 mx-8 w-48 h-32 flex flex-col items-center justify-center gap-3 bg-background rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6"
+              className="flex-shrink-0 w-48 h-32 flex flex-col items-center justify-center gap-3 bg-background rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6"
             >
               <div className="h-20 w-full flex items-center justify-center">
                 <img
                   src={partner.logo || "/placeholder.svg"}
                   alt={`Logo ${partner.name}`}
-                  className="max-h-full max-w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                  className="max-h-full max-w-full object-contain"
                 />
               </div>
               <span className="text-xs font-semibold text-muted-foreground tracking-wide">{partner.name}</span>
