@@ -1,13 +1,15 @@
 "use client"
 
+//Socios Deseados ENCAC, PRODORTH, SCIENCE MEDIC, HC BIOLOGICS, BONETECH.
 export function PartnerCarousel() {
   const partners = [
-    { name: "AESCULAP", logo: "/logos/aesculap-logo.jpg" },
-    { name: "ENDAC", logo: "/logos/endac-logo.jpg" },
-    { name: "PRODORTH", logo: "/logos/prodorth-logo.jpg" },
-    { name: "BONEGRAFT", logo: "/logos/bonegraft-logo.jpg" },
+    { name: "ENDAC", logo: "/logos/endac-logo.png" },
+    { name: "PRODORTH", logo: "/logos/prodorth-logo.png" },
     { name: "SCIENCEMEDIC", logo: "/logos/sciencemedic-logo.jpg" },
+    { name: "HC BIOLOGICS", logo: "/logos/hcbiologics_logo.jpg" },
+    { name: "BONETECH", logo: "/logos/bonetech-logo.png" },
   ]
+
 
   // Duplicate for seamless loop
   const duplicatedPartners = [...partners, ...partners]
@@ -32,7 +34,7 @@ export function PartnerCarousel() {
                 <img
                   src={partner.logo || "/placeholder.svg"}
                   alt={`Logo ${partner.name}`}
-                  className="max-h-full max-w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                  className="max-h-full max-w-full object-contain"
                 />
               </div>
               <span className="text-xs font-semibold text-muted-foreground tracking-wide">{partner.name}</span>
