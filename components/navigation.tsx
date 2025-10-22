@@ -18,12 +18,8 @@ export function Navigation() {
   }, [])
 
   const navLinks = [
-    // "Inicio" eliminado
     { href: "/nosotros", label: "Nosotros" },
     { href: "/productos", label: "Productos" },
-    // "Distribución" eliminado
-    // "Noticias" eliminado
-    { href: "/contacto", label: "Contacto" },
   ]
 
   return (
@@ -63,7 +59,7 @@ export function Navigation() {
                 size="lg"
                 className="ml-2 font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-smooth"
               >
-                <Link href="/contacto">Solicitar Cotización</Link>
+                <Link href="/contacto">Contacto</Link>
               </Button>
             </div>
 
@@ -89,7 +85,7 @@ export function Navigation() {
                 ))}
                 <Button asChild size="lg" className="mt-2 font-semibold">
                   <Link href="/contacto" onClick={() => setIsOpen(false)}>
-                    Solicitar Cotización
+                    Contacto
                   </Link>
                 </Button>
               </div>

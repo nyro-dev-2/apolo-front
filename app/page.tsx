@@ -8,8 +8,8 @@ export default function HomePage() {
   const highlights = [
     {
       icon: Award,
-      title: "Certificación Internacional",
-      description: "Cumplimos normas ASTM e ISO para garantizar la máxima calidad",
+      title: "Productos de Calidad",
+      description: "Implantes espinales y dispositivos neuroquirúrgicos de última tecnología",
     },
     {
       icon: Truck,
