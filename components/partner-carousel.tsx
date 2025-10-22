@@ -9,8 +9,9 @@ export function PartnerCarousel() {
     { name: "BONETECH", logo: "/logos/bonetech-logo.png" },
   ]
 
-  // Duplicate for seamless loop
-  const duplicatedPartners = [...partners, ...partners]
+  // Duplicamos muchas veces para que el salto sea muy infrecuente
+  const duplicatedPartners = [...partners, ...partners, ...partners, ...partners, 
+                             ...partners, ...partners, ...partners, ...partners]
 
   return (
     <div className="relative overflow-hidden bg-muted/30 py-12">
@@ -22,11 +23,9 @@ export function PartnerCarousel() {
       </div>
 
       <div className="container mx-auto relative">
-        {/* Gradientes para desvanecimiento en los bordes */}
         <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-muted/30 to-transparent z-10"></div>
         <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-muted/30 to-transparent z-10"></div>
         
-        {/* Contenedor del carrusel con overflow para mostrar solo el área deseada */}
         <div className="overflow-hidden">
           <div className="flex w-max gap-16 animate-marquee">
             {duplicatedPartners.map((partner, index) => (
