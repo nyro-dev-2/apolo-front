@@ -1,9 +1,7 @@
 import { Mail, Phone, MapPin } from "lucide-react"
 
 export function Footer() {
-  const partners = ["AESCULAP", "ENDAC", "PRODORTH", "BONEGRAFT", "SCIENCEMEDIC"]
-
-  const certifications = ["ASTM", "ISO"]
+  const partners = ["ENDAC", "PRODORTH", "SCIENCEMEDIC", "HC BIOLOGICS", "BONETECH"]
 
   const logistics = ["Cruz del Sur", "Flores Cargo", "DHL", "FedEx"]
 
@@ -53,16 +51,8 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Certifications & Logistics */}
+          {/* Logistics */}
           <div>
-            <h4 className="mb-4 font-semibold text-foreground">Certificaciones</h4>
-            <div className="mb-4 flex gap-3 text-sm font-medium text-muted-foreground">
-              {certifications.map((cert) => (
-                <span key={cert} className="rounded-md bg-primary/10 px-3 py-1">
-                  {cert}
-                </span>
-              ))}
-            </div>
             <h4 className="mb-4 font-semibold text-foreground">Logística</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               {logistics.map((company) => (
