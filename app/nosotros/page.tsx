@@ -18,7 +18,6 @@ export default function AboutPage() {
   ]
 
   const qualityPoints = [
-    "Cumplimiento de normas ASTM e ISO",
     "Comunicación directa con cirujanos",
     "Mejoras continuas basadas en retroalimentación",
     "Investigación y desarrollo constante",
