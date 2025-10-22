@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { Menu, X, Phone, Mail } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Navigation() {
@@ -18,33 +18,17 @@ export function Navigation() {
   }, [])
 
   const navLinks = [
-    { href: "/", label: "Inicio" },
+    // "Inicio" eliminado
     { href: "/nosotros", label: "Nosotros" },
     { href: "/productos", label: "Productos" },
-    { href: "/distribucion", label: "Distribución" },
-    { href: "/noticias", label: "Noticias" },
+    // "Distribución" eliminado
+    // "Noticias" eliminado
     { href: "/contacto", label: "Contacto" },
   ]
 
   return (
     <>
-      <div className="hidden lg:block bg-secondary/50 backdrop-blur-md text-foreground py-2.5 border-b border-border/50 font-header">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-end gap-6 text-sm">
-            <a href="tel:+5114801525" className="flex items-center gap-2 hover:text-primary transition-smooth">
-              <Phone className="h-3.5 w-3.5" />
-              <span className="font-medium">+51 1 480 1525</span>
-            </a>
-            <a
-              href="mailto:ventas@apolomedical.com.pe"
-              className="flex items-center gap-2 hover:text-primary transition-smooth"
-            >
-              <Mail className="h-3.5 w-3.5" />
-              <span className="font-medium">ventas@apolomedical.com.pe</span>
-            </a>
-          </div>
-        </div>
-      </div>
+      {/* Header superior con teléfono y correo eliminado */}
 
       <nav
         className={`sticky top-0 z-50 w-full border-b transition-smooth font-header ${
@@ -54,13 +38,13 @@ export function Navigation() {
         }`}
       >
         <div className="container mx-auto px-4">
-          <div className="flex h-20 items-center justify-between">
+          <div className="flex h-24 items-center justify-between">
             <Link href="/" className="flex items-center space-x-3 group">
               <div className="flex flex-col">
-                <span className="text-2xl font-heading font-bold text-primary tracking-tight group-hover:text-primary/80 transition-smooth">
+                <span className="text-3xl font-heading font-bold text-primary tracking-tight group-hover:text-primary/80 transition-smooth">
                   Apolo Medical
                 </span>
-                <span className="text-xs font-semibold text-muted-foreground tracking-widest uppercase">HT S.A.C.</span>
+                <span className="text-sm font-semibold text-muted-foreground tracking-widest uppercase">HT S.A.C.</span>
               </div>
             </Link>
 
@@ -69,14 +53,14 @@ export function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="relative text-sm font-semibold text-foreground/80 transition-smooth hover:text-primary after:absolute after:bottom-[-8px] after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-smooth hover:after:w-full"
+                  className="relative text-base font-semibold text-foreground/80 transition-smooth hover:text-primary after:absolute after:bottom-[-8px] after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-smooth hover:after:w-full"
                 >
                   {link.label}
                 </Link>
               ))}
               <Button
                 asChild
-                size="default"
+                size="lg"
                 className="ml-2 font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-smooth"
               >
                 <Link href="/contacto">Solicitar Cotización</Link>
@@ -85,7 +69,7 @@ export function Navigation() {
 
             {/* Mobile Menu Button */}
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setIsOpen(!isOpen)}>
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
 
@@ -97,7 +81,7 @@ export function Navigation() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-base font-semibold text-foreground/80 transition-smooth hover:text-primary"
+                    className="text-lg font-semibold text-foreground/80 transition-smooth hover:text-primary"
                     onClick={() => setIsOpen(false)}
                   >
                     {link.label}

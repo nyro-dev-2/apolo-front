@@ -220,12 +220,13 @@
   }
 
   .animate-marquee {
-    animation: marquee 30s linear infinite;
+    animation: marquee 60s linear infinite;
     will-change: transform;
   }
 
+
   .animate-scroll {
-    animation: scroll 30s linear infinite;
+    animation: scroll 45s linear infinite;
   }
 
   .animate-scroll:hover {
