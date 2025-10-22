@@ -139,10 +139,15 @@ export default function HomePage() {
               </div>
               <div className="relative">
                 <div className="aspect-video rounded-xl overflow-hidden shadow-2xl shadow-primary/20 border border-primary/20">
-                  <div className="relative w-full h-full bg-white/50 flex items-center justify-center group cursor-pointer">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-smooth" />
-                    <Play className="h-20 w-20 text-primary group-hover:scale-110 transition-smooth" />
-                  </div>
+                  <video 
+                    className="w-full h-full object-cover"
+                    controls
+                    poster="/video-thumbnail.jpg"
+                    preload="metadata"
+                  >
+                    <source src="/videos/presentation.mp4" type="video/mp4" />
+                    Tu navegador no soporta la reproducción de video.
+                  </video>
                 </div>
                 <p className="text-center mt-4 text-sm text-muted-foreground">
                   Video demostrativo de equipos neuroquirúrgicos
@@ -219,7 +224,7 @@ export default function HomePage() {
               <div className="h-56 overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <img
-                  src="/category-neuroendoscopy.jpg"
+                  src="/category-neuroendoscopy.png"
                   alt="Neuroendoscopía"
                   className="h-full w-full object-cover group-hover:scale-110 transition-smooth duration-500"
                 />

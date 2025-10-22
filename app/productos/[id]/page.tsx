@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getProductById, products } from "@/lib/products"
-import { CheckCircle2, Download, ArrowLeft, Play } from "lucide-react"
+import { CheckCircle2, Download, ArrowLeft } from "lucide-react"
 import { ProductImageCarousel } from "@/components/product-image-carousel"
 
 export function generateStaticParams() {
@@ -38,50 +38,44 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-7xl">
-            <div className="grid gap-12 lg:grid-cols-2">
-              {/* Images with Carousel */}
-              <div className="space-y-4 animate-fade-in">
-                <ProductImageCarousel images={product.images} productName={product.name} />
+            {/* Header Section - Título y Badge centrados */}
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-4 text-sm">
+                {product.category === "neurocirugia"
+                  ? "Neurocirugía"
+                  : product.category === "columna"
+                    ? "Columna"
+                    : "Accesorios"}
+              </Badge>
+              <h1 className="text-4xl font-bold text-foreground md:text-5xl text-balance font-serif">
+                {product.name}
+              </h1>
+            </div>
 
-                {/* Video Section */}
-                {product.videoUrl && (
-                  <Card className="overflow-hidden">
-                    <CardContent className="p-0">
-                      <div className="relative aspect-video bg-muted group cursor-pointer">
-                        <video
-                          src={product.videoUrl}
-                          controls
-                          className="w-full h-full object-cover"
-                          poster={product.images[0]}
-                        >
-                          Tu navegador no soporta el elemento de video.
-                        </video>
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <Play className="h-16 w-16 text-primary" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+            {/* Main Content Grid */}
+            <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
+              {/* Images - Centrado completamente */}
+              <div className="flex justify-center items-center">
+                <div className="w-full max-w-lg animate-fade-in">
+                  <ProductImageCarousel images={product.images} productName={product.name} />
+                </div>
               </div>
 
-              {/* Details */}
-              <div className="animate-slide-in">
-                <Badge variant="secondary" className="mb-4 text-sm">
-                  {product.category === "neurocirugia"
-                    ? "Neurocirugía"
-                    : product.category === "columna"
-                      ? "Columna"
-                      : "Accesorios"}
-                </Badge>
-                <h1 className="mb-6 text-4xl font-bold text-foreground md:text-5xl text-balance font-serif">
-                  {product.name}
-                </h1>
-                <p className="mb-8 text-lg text-muted-foreground leading-relaxed">{product.fullDescription}</p>
+              {/* Product Information */}
+              <div className="animate-slide-in space-y-8">
+                {/* Description */}
+                <div>
+                  <h2 className="text-2xl font-semibold text-foreground font-serif mb-4">
+                    Descripción
+                  </h2>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    {product.fullDescription}
+                  </p>
+                </div>
 
                 {/* Features */}
-                <div className="mb-8">
-                  <h2 className="mb-6 text-2xl font-semibold text-foreground font-serif">
+                <div>
+                  <h2 className="text-2xl font-semibold text-foreground font-serif mb-6">
                     Características principales
                   </h2>
                   <ul className="space-y-4">
@@ -94,30 +88,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                   </ul>
                 </div>
 
-                {/* Specifications */}
-                {product.specifications && (
-                  <Card className="mb-8 border-primary/20">
-                    <CardContent className="p-8">
-                      <h2 className="mb-6 text-2xl font-semibold text-foreground font-serif">
-                        Especificaciones técnicas
-                      </h2>
-                      <dl className="space-y-4">
-                        {product.specifications.map((spec, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-col sm:flex-row sm:justify-between gap-2 pb-4 border-b border-border last:border-0"
-                          >
-                            <dt className="font-semibold text-foreground text-base">{spec.label}:</dt>
-                            <dd className="text-muted-foreground text-base">{spec.value}</dd>
-                          </div>
-                        ))}
-                      </dl>
-                    </CardContent>
-                  </Card>
-                )}
-
                 {/* Actions */}
-                <div className="flex flex-col gap-4 sm:flex-row">
+                <div className="flex flex-col gap-4 sm:flex-row pt-4">
                   <Button asChild size="lg" className="flex-1 transition-smooth hover:scale-105 text-base py-6">
                     <Link href="/contacto">Solicitar cotización</Link>
                   </Button>
@@ -137,6 +109,32 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 </div>
               </div>
             </div>
+
+            {/* Specifications - Ancho completo debajo */}
+            {product.specifications && (
+              <Card className="mb-16 border-primary/20">
+                <CardContent className="p-8">
+                  <h2 className="text-2xl font-semibold text-foreground font-serif mb-8 text-center">
+                    Especificaciones técnicas
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+                    {product.specifications.map((spec, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col p-4 bg-muted/30 rounded-lg border border-border/50 h-full min-h-[80px] justify-between"
+                      >
+                        <dt className="font-semibold text-foreground text-sm mb-2 leading-tight">
+                          {spec.label}
+                        </dt>
+                        <dd className="text-muted-foreground text-base font-medium break-words">
+                          {spec.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </section>
@@ -145,7 +143,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       <section className="py-20 bg-gradient-to-br from-muted to-muted/50">
         <div className="container mx-auto px-4">
           <h2 className="mb-12 text-3xl font-bold text-foreground text-center font-serif">Productos relacionados</h2>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
             {products
               .filter((p) => p.category === product.category && p.id !== product.id)
               .slice(0, 3)
