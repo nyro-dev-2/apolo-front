@@ -7,30 +7,36 @@ export interface Product {
   features: string[]
   specifications?: { label: string; value: string }[]
   images: string[]
-  videoUrl?: string
   pdfUrl?: string
 }
 
 export const products: Product[] = [
   {
     id: "craneotomo-midas-rex",
-    name: "Craneótomo Midas Rex Legend",
+    name: "Craneótomo Midas Rex™ Legend EHS",
     category: "neurocirugia",
-    shortDescription: "Sistema microdebridador, taladro y sierra quirúrgica de alta precisión",
+    shortDescription:
+      "Sistema quirúrgico de alta velocidad para neurocirugía. Combina microdebridador, taladro y sierra para cortes precisos en tejido óseo y blando.",
     fullDescription:
-      "Sistema microdebridador, taladro y sierra quirúrgica para eliminar tejido duro y blando con máxima precisión. Incluye consola avanzada, bombas de irrigación, pedal de control y piezas de mano intercambiables.",
+      "El Craneótomo Midas Rex™ Legend EHS de Medtronic es un sistema de alta precisión diseñado para la eliminación controlada de tejido duro y blando en procedimientos de neurocirugía craneal y de base de cráneo. Combina una consola de control avanzada, bombas de irrigación integradas, pedal ergonómico y piezas de mano intercambiables para ofrecer potencia, precisión y seguridad en cada intervención. Ideal para procedimientos neuroquirúrgicos, de columna y otorrinolaringología (ENT).",
     features: [
-      "Consola de control avanzada",
-      "Bombas de irrigación integradas",
-      "Pedal de control ergonómico",
-      "Piezas de mano intercambiables",
-      "Eliminación precisa de tejido duro y blando",
-      "Sistema de seguridad integrado",
+      "Consola de control avanzada con regulación digital de velocidad y torque",
+      "Bombas de irrigación integradas para enfriamiento continuo",
+      "Pedal ergonómico de doble función con control de velocidad variable",
+      "Piezas de mano intercambiables: microdebridador, taladro y sierra quirúrgica",
+      "Eliminación precisa de tejido duro y blando con mínimo trauma",
+      "Sistema de seguridad integrado contra sobrecarga térmica y eléctrica",
+      "Diseño modular y compatible con accesorios Medtronic Legend y Stylus",
     ],
     specifications: [
-      { label: "Tipo", value: "Sistema microdebridador" },
-      { label: "Aplicación", value: "Neurocirugía craneal" },
-      { label: "Componentes", value: "Consola, bombas, pedal, piezas de mano" },
+      { label: "Tipo", value: "Sistema microdebridador de alta velocidad" },
+      { label: "Aplicación", value: "Neurocirugía craneal, columna y base de cráneo" },
+      { label: "Velocidad máxima", value: "Hasta 75,000 rpm" },
+      { label: "Fuente de energía", value: "Eléctrica (consola EC200 / Stylus EHS)" },
+      { label: "Modo de control", value: "Pedal de pie variable o interfaz manual" },
+      { label: "Torque", value: "Alto, ajustable según aplicación" },
+      { label: "Sistema de irrigación", value: "Bomba peristáltica integrada" },
+      { label: "Componentes incluidos", value: "Consola, bombas, pedal, piezas de mano, fresas y cables" },
     ],
     images: [
       "/products/craneotomo-midas-rex-1.jpg",
@@ -38,34 +44,43 @@ export const products: Product[] = [
       "/products/craneotomo-midas-rex-3.jpg",
       "/products/craneotomo-midas-rex-4.jpg",
     ],
-    videoUrl: "/videos/midas-rex-demo.mp4",
   },
   {
     id: "aspirador-ultrasonico-misonix",
-    name: "Aspirador Ultrasónico Misonix Sonastar RF 1000",
+    name: "Aspirador Ultrasónico Misonix® Sonastar RF 1000",
     category: "neurocirugia",
-    shortDescription: "Sistema multifuncional con pedal inalámbrico de 4 funciones",
+    shortDescription:
+      "Sistema ultrasónico multifuncional con pedal inalámbrico de 4 funciones para resección precisa de hueso y tejidos blandos.",
     fullDescription:
-      "Pedal inalámbrico de 4 funciones, sistema multifuncional y osteoscultor. Trabaja eficientemente en hueso, tumores calcificados y tejidos blandos con tecnología ultrasónica avanzada.",
+      "El Misonix® Sonastar RF 1000 es un sistema quirúrgico ultrasónico que combina fragmentación, aspiración e irrigación en una sola plataforma. Diseñado para neurocirugía y cirugía espinal, permite la eliminación controlada de hueso, tumores calcificados y tejidos blandos con mínima afectación del tejido sano. Incluye pedal inalámbrico de 4 funciones y control electrónico con respuesta dinámica según el tejido. Soporta integración de coagulación monopolar (RF) de forma simultánea con la aspiración ultrasónica.",
     features: [
-      "Pedal inalámbrico de 4 funciones",
-      "Tecnología ultrasónica avanzada",
-      "Osteoscultor integrado",
-      "Trabajo en hueso y tejido blando",
-      "Eliminación de tumores calcificados",
-      "Control preciso de potencia",
+      "Pedal inalámbrico progresivo de 4 funciones",
+      "Frecuencia ultrasónica de 23 kHz con generador piezoeléctrico",
+      "Fragmentación, aspiración e irrigación simultáneas",
+      "Respuesta dinámica: ajuste automático de potencia según el tejido",
+      "Low Vac System (bajo vacío) para control delicado de aspiración",
+      "Coagulación monopolar opcional integrada (módulo RF)",
+      "Piezas de mano universales esterilizables y ergonómicas",
+      "Interfaz intuitiva con control digital de parámetros",
     ],
     specifications: [
-      { label: "Tipo", value: "Aspirador ultrasónico" },
-      { label: "Aplicación", value: "Neurocirugía y cirugía espinal" },
-      { label: "Control", value: "Pedal inalámbrico 4 funciones" },
+      { label: "Tipo", value: "Aspirador ultrasónico quirúrgico multifuncional" },
+      { label: "Aplicación", value: "Neurocirugía y cirugía espinal; resección tumoral" },
+      { label: "Frecuencia ultrasónica", value: "≈ 23 kHz" },
+      { label: "Piezas de mano", value: "2 piezas universales de 23 kHz (esterilizables)" },
+      { label: "Modo de control", value: "Pedal inalámbrico de 4 funciones y panel frontal" },
+      { label: "Aspiración", value: "Low Vac System para bajo vacío controlado" },
+      { label: "Coagulación", value: "Monopolar opcional (módulo RF), simultánea a la aspiración" },
+      { label: "Fuente de energía", value: "Compatible con 110/220/230 V AC, 50/60 Hz" },
+      { label: "Funciones integradas", value: "Fragmentación, aspiración e irrigación" },
+      { label: "Registro/Regulaciones", value: "FDA (p. ej., K212060); cumplimiento de normativas internacionales" },
+      { label: "Componentes (según configuración)", value: "Consola RF 1000, pedal inalámbrico, piezas de mano, cánulas, sistema de irrigación; módulos RF opcionales" }
     ],
     images: [
       "/products/aspirador-misonix-1.jpg",
       "/products/aspirador-misonix-2.jpg",
       "/products/aspirador-misonix-3.jpg",
     ],
-    videoUrl: "/videos/misonix-demo.mp4",
   },
   {
     id: "neuroendoscopio-aesculap",
