@@ -29,16 +29,12 @@ export function PartnerCarousel() {
         <div className="overflow-hidden">
           <div className="flex w-max gap-16 animate-marquee">
             {duplicatedPartners.map((partner, index) => (
-              <div
+              <img
                 key={`${partner.name}-${index}`}
-                className="flex-shrink-0 w-48 h-32 flex items-center justify-center bg-background rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6"
-              >
-                <img
-                  src={partner.logo || "/placeholder.svg"}
-                  alt={`Logo ${partner.name}`}
-                  className="max-h-full max-w-full object-contain"
-                />
-              </div>
+                src={partner.logo || "/placeholder.svg"}
+                alt={`Logo ${partner.name}`}
+                className="flex-shrink-0 h-32 object-contain"
+              />
             ))}
           </div>
         </div>
