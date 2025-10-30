@@ -98,6 +98,8 @@ const contactMethodCopy: Record<ContactFormValues["contactMethod"], string> = {
   whatsapp: "WhatsApp",
 }
 
+const WHATSAPP_PHONE = "51957359298"
+
 function buildProductMessage(productName?: string) {
   if (!productName) {
     return "Hola, me gustaría recibir asesoría sobre las soluciones disponibles y la mejor alternativa para mi centro médico."
@@ -160,6 +162,15 @@ function ContactPageContent() {
     [selectedProductId],
   )
   const messageValue = form.watch("message") ?? ""
+
+  const whatsappMessage = selectedProduct
+    ? `Hola, estoy interesado en ${selectedProduct.name}. ¿Podrían enviarme ficha técnica, disponibilidad y opciones de demo?`
+    : "Hola, me gustaría coordinar una asesoría con el equipo de Apolo Medical HT."
+
+  const whatsappUrl = useMemo(
+    () => `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(whatsappMessage)}`,
+    [whatsappMessage],
+  )
 
   useEffect(() => {
     const productParam = searchParams.get("product")
@@ -293,7 +304,7 @@ function ContactPageContent() {
                 className="bg-white text-primary hover:bg-white/90 px-8 py-6 text-base"
                 asChild
               >
-                <a href="https://wa.me/51957359298" target="_blank" rel="noopener noreferrer">
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                   Escríbenos por WhatsApp
                 </a>
               </Button>
@@ -659,7 +670,7 @@ function ContactPageContent() {
                   <div className="flex w-full items-center justify-between">
                     <div className="flex gap-3">
                       <Button variant="outline" size="icon" asChild>
-                        <a href="https://wa.me/51957359298" target="_blank" rel="noopener noreferrer">
+                        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                           <MessageSquare className="h-5 w-5" />
                         </a>
                       </Button>

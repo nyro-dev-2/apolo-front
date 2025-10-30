@@ -16,7 +16,7 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      'fixed inset-x-0 top-6 z-[100] mx-auto flex w-full max-w-md flex-col gap-4 px-4 sm:left-auto sm:right-6 sm:top-6 sm:mx-0 sm:max-w-sm sm:px-0',
+      'pointer-events-none fixed inset-x-0 top-6 z-[100] mx-auto flex w-full max-w-lg flex-col gap-4 px-4 sm:max-w-xl',
       className,
     )}
     {...props}
@@ -25,14 +25,14 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName
 
 const toastVariants = cva(
-  'group pointer-events-auto relative flex w-full items-start gap-4 overflow-hidden rounded-2xl border shadow-lg ring-1 backdrop-blur-xl transition-all before:absolute before:inset-y-0 before:left-0 before:w-[6px] before:opacity-70 before:content-[""] data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
+  'group pointer-events-auto relative flex w-full flex-col items-center gap-3 overflow-hidden rounded-3xl border px-6 py-5 text-center shadow-[0_28px_60px_-24px_rgba(8,47,73,0.65)] ring-1 backdrop-blur-xl transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-top-full data-[state=open]:fade-in-80 data-[state=open]:slide-in-from-top-full sm:flex-row sm:items-center sm:gap-5 sm:text-left',
   {
     variants: {
       variant: {
         default:
-          'border-primary/40 bg-primary text-primary-foreground ring-primary/25 shadow-[0_28px_60px_-20px_rgba(8,47,73,0.75)] before:bg-white/70',
+          'border-primary/25 bg-gradient-to-br from-primary to-primary/85 text-primary-foreground ring-primary/20 shadow-[0_28px_60px_-20px_rgba(8,47,73,0.5)]',
         destructive:
-          'destructive group border-destructive/40 bg-destructive text-destructive-foreground ring-destructive/25 shadow-[0_28px_60px_-20px_rgba(127,29,29,0.75)] before:bg-destructive-foreground/60',
+          'destructive group border-destructive/30 bg-gradient-to-br from-destructive to-destructive/80 text-destructive-foreground ring-destructive/25 shadow-[0_28px_60px_-20px_rgba(127,29,29,0.55)]',
       },
     },
     defaultVariants: {
