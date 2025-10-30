@@ -216,10 +216,13 @@ export default function HomePage() {
             <Card className="overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-smooth group border-border/50 bg-card/50 backdrop-blur-sm">
               <div className="h-56 overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
-                <img
+                <Image
+                  fill
                   src="/category-cranial-systems.jpg"
-                  alt="Sistemas Craneales"
-                  className="h-full w-full object-cover group-hover:scale-110 transition-smooth duration-500"
+                  alt="Equipo neuroquirúrgico para sistemas craneales"
+                  className="object-cover transition-smooth duration-500 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
                 />
               </div>
               <CardContent className="p-6 md:p-7">
@@ -241,10 +244,13 @@ export default function HomePage() {
             <Card className="overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-smooth group border-border/50 bg-card/50 backdrop-blur-sm">
               <div className="h-56 overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
-                <img
+                <Image
+                  fill
                   src="/category-spinal-implants.jpg"
-                  alt="Implantes Espinales"
-                  className="h-full w-full object-cover group-hover:scale-110 transition-smooth duration-500"
+                  alt="Implantes espinales de titanio"
+                  className="object-cover transition-smooth duration-500 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  loading="lazy"
                 />
               </div>
               <CardContent className="p-6 md:p-7">
@@ -266,10 +272,13 @@ export default function HomePage() {
             <Card className="overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-smooth group border-border/50 bg-card/50 backdrop-blur-sm">
               <div className="h-56 overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
-                <img
+                <Image
+                  fill
                   src="/category-neuroendoscopy.png"
-                  alt="Neuroendoscopía"
-                  className="h-full w-full object-cover group-hover:scale-110 transition-smooth duration-500"
+                  alt="Instrumental para neuroendoscopía"
+                  className="object-cover transition-smooth duration-500 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  loading="lazy"
                 />
               </div>
               <CardContent className="p-6 md:p-7">

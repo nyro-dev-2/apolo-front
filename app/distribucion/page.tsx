@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -125,10 +126,13 @@ export default function DistributionPage() {
                 >
                   <CardContent className="p-6 text-center">
                     <div className="mb-4 flex h-24 items-center justify-center rounded-lg bg-white p-4">
-                      <img
+                      <Image
                         src={partner.logo || "/placeholder.svg"}
                         alt={`${partner.name} logo`}
+                        width={160}
+                        height={80}
                         className="max-h-full max-w-full object-contain"
+                        sizes="(max-width: 640px) 60vw, (max-width: 1024px) 30vw, 160px"
                       />
                     </div>
                     <h3 className="font-semibold text-foreground mb-2">{partner.name}</h3>
@@ -166,10 +170,13 @@ export default function DistributionPage() {
               <p className="text-muted-foreground">Presencia en las principales ciudades del Perú</p>
             </div>
             <div className="relative h-[400px] overflow-hidden rounded-lg bg-muted">
-              <img
+              <Image
                 src="/peru-map-distribution-network.jpg"
                 alt="Mapa de cobertura en Perú"
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 800px"
+                priority
               />
             </div>
             <div className="mt-8 grid gap-4 sm:grid-cols-3 text-center">

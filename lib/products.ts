@@ -1,13 +1,45 @@
+export type ProductCategory = "neurocirugia" | "columna" | "accesorios"
+
 export interface Product {
   id: string
   name: string
-  category: "neurocirugia" | "columna" | "accesorios"
+  category: ProductCategory
+  manufacturer: string
   shortDescription: string
   fullDescription: string
   features: string[]
   specifications?: { label: string; value: string }[]
   images: string[]
   pdfUrl?: string
+  videoUrl?: string
+  keywords?: string[]
+}
+
+export const PRODUCT_CATEGORY_INFO: Array<{
+  id: ProductCategory
+  label: string
+  description: string
+}> = [
+  {
+    id: "neurocirugia",
+    label: "Neurocirugía",
+    description:
+      "Tecnología de precisión para procedimientos neuroquirúrgicos avanzados y de mínima invasión.",
+  },
+  {
+    id: "columna",
+    label: "Columna",
+    description: "Implantes, sistemas de estabilización y soluciones integrales para cirugía de columna.",
+  },
+  {
+    id: "accesorios",
+    label: "Accesorios",
+    description: "Instrumental, consumibles y soluciones complementarias para quirófanos especializados.",
+  },
+]
+
+export function getCategoryLabel(category: ProductCategory): string {
+  return PRODUCT_CATEGORY_INFO.find((item) => item.id === category)?.label ?? category
 }
 
 export const products: Product[] = [
@@ -15,6 +47,7 @@ export const products: Product[] = [
     id: "craneotomo-midas-rex",
     name: "Craneótomo Midas Rex™ Legend EHS",
     category: "neurocirugia",
+    manufacturer: "Medtronic",
     shortDescription:
       "Sistema quirúrgico de alta velocidad para neurocirugía. Combina microdebridador, taladro y sierra para cortes precisos en tejido óseo y blando.",
     fullDescription:
@@ -49,6 +82,7 @@ export const products: Product[] = [
     id: "aspirador-ultrasonico-misonix",
     name: "Aspirador Ultrasónico Misonix® Sonastar RF 1000",
     category: "neurocirugia",
+    manufacturer: "Misonix",
     shortDescription:
       "Sistema ultrasónico multifuncional con pedal inalámbrico de 4 funciones para resección precisa de hueso y tejidos blandos.",
     fullDescription:
@@ -82,44 +116,46 @@ export const products: Product[] = [
       "/products/aspirador-misonix-3.jpg",
     ],
   },
-{
-  id: "neuroendoscopio-aesculap",
-  name: "Neuroendoscopio Aesculap® MINOP®",
-  category: "neurocirugia",
-  shortDescription:
-    "Sistema modular de neuroendoscopia Full HD para procedimientos mínimamente invasivos en neurocirugía.",
-  fullDescription:
-    "El sistema Aesculap® MINOP® es un neuroendoscopio modular de alta precisión diseñado para procedimientos neuroquirúrgicos mínimamente invasivos. Compatible con ópticas Full HD y disponible en direcciones de visión de 0° y 30°, ofrece una calidad de imagen excepcional y una ergonomía superior. Su diseño modular permite combinar distintas ópticas, vainas de trabajo e instrumentos, optimizando la versatilidad y la seguridad intraoperatoria. Ideal para ventriculostomías, biopsias, resecciones tumorales y exploraciones endoscópicas cerebrales.",
-  features: [
-    "Compatibilidad con cámaras Full HD (Aesculap EinsteinVision® o similares)",
-    "Ópticas de 0° y 30° de alta definición",
-    "Sistema modular adaptable a múltiples procedimientos neuroendoscópicos",
-    "Diseño ergonómico y balanceado para mayor precisión",
-    "Instrumental intercambiable y de fácil esterilización",
-    "Calidad óptica alemana con transmisión de luz superior",
-    "Ideal para neurocirugía mínimamente invasiva (ventriculostomía, biopsia, resección tumoral)",
-  ],
-  specifications: [
-    { label: "Tipo", value: "Sistema de neuroendoscopia modular" },
-    { label: "Resolución", value: "Full HD (1920 x 1080 px)" },
-    { label: "Ángulos de visión", value: "0° y 30°" },
-    { label: "Compatibilidad", value: "Sistema de cámara EinsteinVision® o fuentes de luz estándar (Xenón/LED)" },
-    { label: "Material del endoscopio", value: "Acero inoxidable médico con óptica multicapa de alta transmisión" },
-    { label: "Diámetro de las ópticas", value: "2.7 mm a 4 mm según aplicación" },
-    { label: "Aplicaciones principales", value: "Ventriculostomía, biopsia cerebral, resección tumoral y exploración endoscópica" },
-    { label: "Fabricante", value: "Aesculap® (B. Braun Melsungen AG, Alemania)" },
-    { label: "Certificaciones", value: "CE, ISO 13485, FDA" },
-  ],
-  images: [
-    "/products/neuroendoscopio-aesculap-1.jpeg",
-    "/products/neuroendoscopio-aesculap-2.jpeg",
-    "/products/neuroendoscopio-aesculap-3.jpeg",
-  ],
+  {
+    id: "neuroendoscopio-aesculap",
+    name: "Neuroendoscopio Aesculap® MINOP®",
+    category: "neurocirugia",
+    manufacturer: "Aesculap",
+    shortDescription:
+      "Sistema modular de neuroendoscopia Full HD para procedimientos mínimamente invasivos en neurocirugía.",
+    fullDescription:
+      "El sistema Aesculap® MINOP® es un neuroendoscopio modular de alta precisión diseñado para procedimientos neuroquirúrgicos mínimamente invasivos. Compatible con ópticas Full HD y disponible en direcciones de visión de 0° y 30°, ofrece una calidad de imagen excepcional y una ergonomía superior. Su diseño modular permite combinar distintas ópticas, vainas de trabajo e instrumentos, optimizando la versatilidad y la seguridad intraoperatoria. Ideal para ventriculostomías, biopsias, resecciones tumorales y exploraciones endoscópicas cerebrales.",
+    features: [
+      "Compatibilidad con cámaras Full HD (Aesculap EinsteinVision® o similares)",
+      "Ópticas de 0° y 30° de alta definición",
+      "Sistema modular adaptable a múltiples procedimientos neuroendoscópicos",
+      "Diseño ergonómico y balanceado para mayor precisión",
+      "Instrumental intercambiable y de fácil esterilización",
+      "Calidad óptica alemana con transmisión de luz superior",
+      "Ideal para neurocirugía mínimamente invasiva (ventriculostomía, biopsia, resección tumoral)",
+    ],
+    specifications: [
+      { label: "Tipo", value: "Sistema de neuroendoscopia modular" },
+      { label: "Resolución", value: "Full HD (1920 x 1080 px)" },
+      { label: "Ángulos de visión", value: "0° y 30°" },
+      { label: "Compatibilidad", value: "Sistema de cámara EinsteinVision® o fuentes de luz estándar (Xenón/LED)" },
+      { label: "Material del endoscopio", value: "Acero inoxidable médico con óptica multicapa de alta transmisión" },
+      { label: "Diámetro de las ópticas", value: "2.7 mm a 4 mm según aplicación" },
+      { label: "Aplicaciones principales", value: "Ventriculostomía, biopsia cerebral, resección tumoral y exploración endoscópica" },
+      { label: "Fabricante", value: "Aesculap® (B. Braun Melsungen AG, Alemania)" },
+      { label: "Certificaciones", value: "CE, ISO 13485, FDA" },
+    ],
+    images: [
+      "/products/neuroendoscopio-aesculap-1.jpeg",
+      "/products/neuroendoscopio-aesculap-2.jpeg",
+      "/products/neuroendoscopio-aesculap-3.jpeg",
+    ],
   },
   {
     id: "fijacion-craneal-craniofix",
     name: "Fijación Craneal Craniofix 2",
     category: "neurocirugia",
+    manufacturer: "Aesculap",
     shortDescription:
       "Sistema de fijación craneal en aleación de titanio Ti6Al4V, biocompatible, estable y compatible con resonancia magnética.",
     fullDescription:
@@ -155,6 +191,7 @@ export const products: Product[] = [
     id: "clips-aneurisma-yasargil",
     name: "Clips de Aneurisma Yasargil",
     category: "neurocirugia",
+    manufacturer: "Aesculap",
     shortDescription:
       "Clips temporales y permanentes para clipaje de aneurismas cerebrales, en diversas configuraciones y tamaños.",
     fullDescription:
@@ -188,7 +225,8 @@ export const products: Product[] = [
   {
     id: "neuro-patch",
     name: "Neuro-Patch®",
-    category: "neurocirugia",
+    category: "accesorios",
+    manufacturer: "Aesculap",
     shortDescription:
       "Sustituto sintético y duradero de duramadre para reparación dural en neurocirugía.",
     fullDescription:
@@ -222,6 +260,7 @@ export const products: Product[] = [
     id: "sistema-drenaje-becker",
     name: "Sistema Becker EDMS",
     category: "neurocirugia",
+    manufacturer: "Medtronic",
     shortDescription:
       "Sistema de drenaje y monitoreo externo avanzado para drenaje ventricular y control de presión intracraneal.",
     fullDescription:
@@ -257,6 +296,7 @@ export const products: Product[] = [
     id: "valvulas-hidrocefalia",
     name: "Válvulas para Hidrocefalia",
     category: "neurocirugia",
+    manufacturer: "Medtronic / Codman / Sophysa",
     shortDescription:
       "Válvulas de derivación para hidrocefalia en versiones adulto, pediátrica y neonatal, con diseño anatómico y materiales radiopacos.",
     fullDescription:
@@ -292,6 +332,6 @@ export function getProductById(id: string): Product | undefined {
   return products.find((p) => p.id === id)
 }
 
-export function getProductsByCategory(category: string): Product[] {
+export function getProductsByCategory(category: ProductCategory): Product[] {
   return products.filter((p) => p.category === category)
 }
