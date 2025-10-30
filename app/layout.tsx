@@ -6,6 +6,8 @@ import "./globals.css"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { WhatsAppButton } from "@/components/whatsapp-button"
+import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
 
 const inter = Inter({
@@ -43,6 +45,7 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${inter.variable} ${cormorant.variable} ${sourceSans.variable} font-body antialiased`}>
         <ScrollToTop />
+        <WhatsAppButton />
         <Suspense fallback={<div>Loading...</div>}>
           <Navigation />
         </Suspense>
@@ -50,6 +53,7 @@ export default function RootLayout({
         <Suspense fallback={<div>Loading...</div>}>
           <Footer />
         </Suspense>
+        <Toaster />
         <Analytics />
       </body>
     </html>
