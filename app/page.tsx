@@ -1,10 +1,28 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { CheckCircle2, Award, Truck, Users, ArrowRight, Play } from "lucide-react"
+import { CheckCircle2, Award, Truck, Users, ArrowRight } from "lucide-react"
 import { PartnerCarousel } from "@/components/partner-carousel"
 
 export default function HomePage() {
+  const heroValues = [
+    "Soporte técnico en sala",
+    "Distribución nacional inmediata",
+    "Capacitación para equipos quirúrgicos",
+  ]
+
+  const specializations = [
+    "Columna",
+    "Neuroendoscopía",
+    "Accesorios y conectores",
+  ]
+
+  const whatsappNumber = "51957359298"
+  const whatsappMessage =
+    "Hola, me gustaría hablar con un especialista de Apolo Medical HT sobre implantes espinales y neurocirugía."
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
+
   const highlights = [
     {
       icon: Award,
@@ -25,60 +43,83 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col">
-      <section id="hero" className="relative overflow-hidden min-h-[750px] flex items-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-200 via-blue-100 to-blue-300" />
-        <div className="absolute inset-0 bg-[url('/hero-dark-medical-technology.jpg')] bg-cover bg-center opacity-15" />
-        <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/50 to-white/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent" />
+      <section id="hero" className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-20">
+          <Image
+            src="/neurosurgery-medical-equipment-operating-room.jpg"
+            alt="Equipo quirúrgico especializado realizando una cirugía en sala"
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+        </div>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-white/92 via-white/86 to-white/70" />
         <div className="container relative mx-auto px-4 py-24 md:py-32">
-          <div className="mx-auto max-w-5xl text-center">
-          
-            <h1 className="mb-8 text-4xl font-serif font-bold leading-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl text-balance animate-fade-in">
-              Innovación y Confianza en <span className="text-primary text-[1.1em]">Soluciones Médicas</span> Avanzadas
+          <div className="max-w-3xl text-center lg:text-left">
+            <div className="inline-flex items-center gap-3 rounded-full border border-primary/20 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-primary shadow-sm backdrop-blur">
+              Apolo Medical HT S.A.C.
+            </div>
+            <h1 className="mt-6 text-balance text-foreground">
+              Tecnología y soporte para cirugías complejas de <span className="text-primary">columna y neuro</span>
             </h1>
-            <p className="mb-12 text-lg text-foreground/90 sm:text-xl md:text-2xl leading-relaxed text-pretty max-w-3xl mx-auto font-light animate-fade-in">
-              Especialistas en implantes espinales, instrumentos neuroquirúrgicos y dispositivos médico-quirúrgicos de
-              última generación
+            <p className="mt-6 max-w-2xl text-pretty text-foreground/85">
+              Portafolio completo de implantes espinales e instrumentos neuroquirúrgicos, con soporte técnico en sala,
+              capacitación y distribución nacional para asegurar procedimientos previsibles y seguros.
             </p>
-            <div className="flex flex-col gap-5 sm:flex-row sm:justify-center animate-fade-in">
+            <ul className="mt-10 grid gap-3 sm:grid-cols-3 sm:text-left">
+              {heroValues.map((value) => (
+                <li
+                  key={value}
+                  className="flex items-center justify-center gap-3 rounded-xl border border-border/70 bg-white/85 px-4 py-3 text-sm text-foreground/80 shadow-sm backdrop-blur-sm sm:justify-start"
+                >
+                  <CheckCircle2 className="h-5 w-5 text-primary" aria-hidden="true" />
+                  <span>{value}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
               <Button
                 asChild
                 size="lg"
-                className="text-lg font-semibold h-14 px-8 shadow-xl shadow-primary/30 hover:shadow-primary/40 transition-smooth"
+                className="h-14 rounded-xl px-8 text-base font-semibold shadow-lg shadow-primary/25 transition-smooth hover:translate-y-[-2px] hover:shadow-primary/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/70"
               >
                 <Link href="/productos">
-                  Ver Productos <ArrowRight className="ml-2 h-5 w-5" />
+                  Ver catálogo <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                 </Link>
               </Button>
               <Button
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-2 border-foreground/20 glass-effect text-foreground hover:bg-foreground/10 text-lg font-semibold h-14 px-8 transition-smooth bg-transparent"
+                className="h-14 rounded-xl border border-primary/40 px-8 text-base font-semibold text-primary transition-smooth hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/70"
               >
-                <Link href="/contacto">Contáctanos</Link>
+                <Link href="/contacto">Solicitar cotización</Link>
               </Button>
             </div>
+            
           </div>
         </div>
       </section>
 
       <section id="ventajas" className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <div className="grid gap-8 sm:grid-cols-3 max-w-5xl mx-auto">
+          <div className="grid gap-6 sm:grid-cols-3 max-w-5xl mx-auto">
             {highlights.map((highlight, index) => {
               const Icon = highlight.icon
               return (
                 <Card
                   key={index}
-                  className="border-border/50 hover:border-primary/50 transition-smooth hover:shadow-xl hover:shadow-primary/10 bg-card/50 backdrop-blur-sm group"
+                  className="border border-border/70 bg-white/90 shadow-sm transition-smooth hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10"
                 >
-                  <CardContent className="flex flex-col items-center p-6 md:p-8 text-center">
-                    <div className="mb-5 rounded-full bg-primary/10 p-5 group-hover:bg-primary/20 transition-smooth">
-                      <Icon className="h-8 w-8 text-primary" />
+                  <CardContent className="flex h-full flex-col gap-4 p-7 text-left">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/12 text-primary">
+                      <Icon className="h-6 w-6" aria-hidden="true" />
                     </div>
-                    <h3 className="mb-3 font-bold text-lg text-foreground">{highlight.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{highlight.description}</p>
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground">{highlight.title}</h3>
+                      <p className="mt-2 text-sm text-foreground/70 leading-relaxed">{highlight.description}</p>
+                    </div>
                   </CardContent>
                 </Card>
               )
