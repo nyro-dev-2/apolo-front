@@ -69,6 +69,7 @@ export function Navigation() {
                   <Input
                     type="search"
                     placeholder="Buscar producto..."
+                    aria-label="Buscar producto"
                     className="pl-9 h-10 w-48 rounded-full bg-muted/50 focus:w-56 transition-all"
                   />
                 </div>
@@ -120,6 +121,7 @@ export function Navigation() {
                   <Input
                     type="search"
                     placeholder="Buscar producto..."
+                    aria-label="Buscar producto"
                     className="pl-12 h-12 w-full text-base rounded-lg"
                   />
                 </div>
@@ -127,7 +129,7 @@ export function Navigation() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-lg font-semibold text-foreground/80 transition-smooth hover:text-primary py-2"
+                    className="text-lg font-semibold text-foreground/80 transition-smooth hover:text-primary"
                     onClick={() => setIsOpen(false)}
                   >
                     {link.label}
