@@ -25,7 +25,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden min-h-[750px] flex items-center">
+      <section id="hero" className="relative overflow-hidden min-h-[750px] flex items-center">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-200 via-blue-100 to-blue-300" />
         <div className="absolute inset-0 bg-[url('/hero-dark-medical-technology.jpg')] bg-cover bg-center opacity-15" />
         <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/50 to-white/60" />
@@ -33,10 +33,10 @@ export default function HomePage() {
         <div className="container relative mx-auto px-4 py-24 md:py-32">
           <div className="mx-auto max-w-5xl text-center">
           
-            <h1 className="mb-8 text-5xl font-serif font-bold leading-tight text-foreground md:text-6xl lg:text-7xl text-balance animate-fade-in">
+            <h1 className="mb-8 text-4xl font-serif font-bold leading-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl text-balance animate-fade-in">
               Innovación y Confianza en <span className="text-primary text-[1.1em]">Soluciones Médicas</span> Avanzadas
             </h1>
-            <p className="mb-12 text-xl text-foreground/90 md:text-2xl leading-relaxed text-pretty max-w-3xl mx-auto font-light animate-fade-in">
+            <p className="mb-12 text-lg text-foreground/90 sm:text-xl md:text-2xl leading-relaxed text-pretty max-w-3xl mx-auto font-light animate-fade-in">
               Especialistas en implantes espinales, instrumentos neuroquirúrgicos y dispositivos médico-quirúrgicos de
               última generación
             </p>
@@ -63,7 +63,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-background">
+      <section id="ventajas" className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid gap-8 sm:grid-cols-3 max-w-5xl mx-auto">
             {highlights.map((highlight, index) => {
@@ -73,7 +73,7 @@ export default function HomePage() {
                   key={index}
                   className="border-border/50 hover:border-primary/50 transition-smooth hover:shadow-xl hover:shadow-primary/10 bg-card/50 backdrop-blur-sm group"
                 >
-                  <CardContent className="flex flex-col items-center p-8 text-center">
+                  <CardContent className="flex flex-col items-center p-6 md:p-8 text-center">
                     <div className="mb-5 rounded-full bg-primary/10 p-5 group-hover:bg-primary/20 transition-smooth">
                       <Icon className="h-8 w-8 text-primary" />
                     </div>
@@ -87,17 +87,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="relative py-24 overflow-hidden">
+      <section id="tecnologia" className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/advanced-neurosurgery-equipment.jpg')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/85 to-white/80" />
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
               <div>
-                <h2 className="mb-6 text-4xl font-bold text-foreground lg:text-5xl text-balance">
+                <h2 className="mb-6 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl text-balance">
                   Tecnología Médica de <span className="text-primary text-[1.15em]">Vanguardia</span>
                 </h2>
-                <p className="text-lg text-foreground/80 leading-relaxed mb-10">
+                <p className="text-base md:text-lg text-foreground/80 leading-relaxed mb-10">
                   En Apolo Medical HT nos enfocamos en la innovación médica, la investigación continua y la calidad
                   clínica. Cada producto es fruto del conocimiento científico y la experiencia quirúrgica.
                 </p>
@@ -159,13 +159,15 @@ export default function HomePage() {
       </section>
 
       {/* Partners Section */}
-      <PartnerCarousel />
+      <section id="socios">
+        <PartnerCarousel />
+      </section>
 
-      <section className="py-24 bg-secondary/30">
+      <section id="especialidades" className="py-24 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-5">Nuestras Especialidades</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-5">Nuestras Especialidades</h2>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
               Soluciones integrales para neurocirugía y cirugía de columna
             </p>
           </div>
@@ -179,7 +181,7 @@ export default function HomePage() {
                   className="h-full w-full object-cover group-hover:scale-110 transition-smooth duration-500"
                 />
               </div>
-              <CardContent className="p-7">
+              <CardContent className="p-6 md:p-7">
                 <h3 className="font-bold text-xl mb-3 text-foreground">Sistemas Craneales</h3>
                 <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
                   Craneotomos, sistemas de fijación craneal y clips de aneurisma
@@ -204,7 +206,7 @@ export default function HomePage() {
                   className="h-full w-full object-cover group-hover:scale-110 transition-smooth duration-500"
                 />
               </div>
-              <CardContent className="p-7">
+              <CardContent className="p-6 md:p-7">
                 <h3 className="font-bold text-xl mb-3 text-foreground">Implantes Espinales</h3>
                 <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
                   Sistemas de fijación vertebral y cages intervertebrales
@@ -229,7 +231,7 @@ export default function HomePage() {
                   className="h-full w-full object-cover group-hover:scale-110 transition-smooth duration-500"
                 />
               </div>
-              <CardContent className="p-7">
+              <CardContent className="p-6 md:p-7">
                 <h3 className="font-bold text-xl mb-3 text-foreground">Neuroendoscopía</h3>
                 <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
                   Equipos de neuroendoscopía y aspiradores ultrasónicos
@@ -249,14 +251,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="relative py-28 overflow-hidden">
+      <section id="cta-final" className="relative py-28 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/neurosurgery-medical-equipment-operating-room.jpg')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/80 to-white/80" />
         <div className="container relative mx-auto px-4 text-center">
-          <h2 className="mb-6 text-4xl font-bold md:text-5xl text-balance max-w-3xl mx-auto text-foreground">
+          <h2 className="mb-6 text-3xl font-bold md:text-5xl text-balance max-w-3xl mx-auto text-foreground">
             ¿Listo para Mejorar tus Procedimientos Quirúrgicos?
           </h2>
-          <p className="mb-12 text-lg text-foreground/90 mx-auto max-w-2xl text-pretty leading-relaxed">
+          <p className="mb-12 text-base md:text-lg text-foreground/90 mx-auto max-w-2xl text-pretty leading-relaxed">
             Descubre nuestra línea completa de productos neuroquirúrgicos y espinales respaldados por la mejor
             tecnología
           </p>
