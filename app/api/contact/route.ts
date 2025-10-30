@@ -31,7 +31,11 @@ export async function POST(req: Request) {
       }
     }
 
-    if (!process.env.ZOHO_USER || !process.env.ZOHO_PASS || !process.env.SMTP_HOST) {
+    const smtpHost = process.env.SMTP_HOST
+    const smtpUser = process.env.ZOHO_USER ?? process.env.SMTP_USER
+    const smtpPass = process.env.ZOHO_PASS ?? process.env.SMTP_PASS
+
+    if (!smtpHost || !smtpUser || !smtpPass) {
       return new Response(
         JSON.stringify({ ok: false, error: "Configuración SMTP incompleta." }),
         { status: 500, headers: { "Content-Type": "application/json" } },
@@ -44,12 +48,12 @@ export async function POST(req: Request) {
       : smtpPort === 465
 
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
+      host: smtpHost,
       port: smtpPort,
       secure: smtpSecure,
       auth: {
-        user: process.env.ZOHO_USER,
-        pass: process.env.ZOHO_PASS,
+        user: smtpUser,
+        pass: smtpPass,
       },
     })
 
@@ -112,8 +116,8 @@ ${payload.message}`
     `
 
     await transporter.sendMail({
-      from: `Apolo Medical HT <${process.env.ZOHO_USER}>`,
-      to: process.env.CONTACT_TO || process.env.ZOHO_USER,
+  from: `Apolo Medical HT <${smtpUser}>`,
+  to: process.env.CONTACT_TO || smtpUser,
       replyTo: payload.email,
       subject,
       text: textBody,
