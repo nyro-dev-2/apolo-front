@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       if (!payload[field] || String(payload[field]).trim() === "") {
         return new Response(
           JSON.stringify({ ok: false, error: `El campo ${String(field)} es obligatorio.` }),
-          { status: 400 },
+          { status: 400, headers: { "Content-Type": "application/json" } },
         )
       }
     }
@@ -34,14 +34,19 @@ export async function POST(req: Request) {
     if (!process.env.ZOHO_USER || !process.env.ZOHO_PASS || !process.env.SMTP_HOST) {
       return new Response(
         JSON.stringify({ ok: false, error: "Configuración SMTP incompleta." }),
-        { status: 500 },
+        { status: 500, headers: { "Content-Type": "application/json" } },
       )
     }
 
+    const smtpPort = Number.parseInt(process.env.SMTP_PORT ?? "465", 10)
+    const smtpSecure = process.env.SMTP_SECURE
+      ? process.env.SMTP_SECURE.toLowerCase() === "true"
+      : smtpPort === 465
+
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT || 465),
-      secure: (process.env.SMTP_SECURE ?? "true") === "true",
+      port: smtpPort,
+      secure: smtpSecure,
       auth: {
         user: process.env.ZOHO_USER,
         pass: process.env.ZOHO_PASS,
@@ -115,12 +120,25 @@ ${payload.message}`
       html: htmlBody,
     })
 
-    return new Response(JSON.stringify({ ok: true }), { status: 200 })
+    return new Response(JSON.stringify({ ok: true }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
   } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "No se pudo enviar el mensaje en este momento."
+    const isProduction = process.env.NODE_ENV === "production"
+    const publicMessage = isProduction
+      ? "No se pudo enviar el mensaje en este momento."
+      : errorMessage
+
     console.error("Error enviando contacto:", error)
     return new Response(
-      JSON.stringify({ ok: false, error: "No se pudo enviar el mensaje en este momento." }),
-      { status: 500 },
+      JSON.stringify({ ok: false, error: publicMessage }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
     )
   }
 }

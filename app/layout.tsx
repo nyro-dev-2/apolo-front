@@ -6,6 +6,7 @@ import "./globals.css"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
 
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayout({
         <Suspense fallback={<div>Loading...</div>}>
           <Footer />
         </Suspense>
+        <Toaster />
         <Analytics />
       </body>
     </html>
