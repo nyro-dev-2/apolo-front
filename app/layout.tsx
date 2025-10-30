@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Cormorant_Garamond, Source_Sans_3 } from "next/font/google"
+import { Inter, Manrope } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { Navigation } from "@/components/navigation"
@@ -16,16 +16,9 @@ const inter = Inter({
   display: "swap",
 })
 
-const cormorant = Cormorant_Garamond({
+const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-cormorant",
-  display: "swap",
-})
-
-const sourceSans = Source_Sans_3({
-  subsets: ["latin"],
-  variable: "--font-source-sans",
+  variable: "--font-manrope",
   display: "swap",
 })
 
@@ -43,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${inter.variable} ${cormorant.variable} ${sourceSans.variable} font-body antialiased`}>
+      <body className={`${inter.variable} ${manrope.variable} font-body antialiased`}>
         <ScrollToTop />
         <WhatsAppButton />
         <Suspense fallback={<div>Loading...</div>}>
