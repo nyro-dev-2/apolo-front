@@ -42,6 +42,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Mail, Phone, MapPin, MessageSquare, Linkedin, Instagram, Clock } from "lucide-react"
+import { COMPANY_ADDRESS } from "@/lib/company-info"
 import { products } from "@/lib/products"
 import { useToast } from "@/hooks/use-toast"
 
@@ -632,14 +633,17 @@ function ContactPageContent() {
                     <div>
                       <p className="font-semibold text-foreground">Línea directa</p>
                       <div className="space-y-1 text-muted-foreground">
-                        <a href="tel:+51957359298" className="hover:text-primary">
+                        <div>
+                          <a href="tel:+51957359298" className="hover:text-primary">
                           (+51) 957 359 298
-                        </a>
-                        <a href="tel:+51958362601" className="hover:text-primary">
+                          </a>
+                        </div>
+                        <div>
+                          <a href="tel:+51958362601" className="hover:text-primary">
                           (+51) 958 362 601
-                        </a>
+                          </a>
+                        </div>
                       </div>
-                      <p className="text-xs text-muted-foreground/80">Atención emergencias quirúrgicas 24/7.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -648,9 +652,7 @@ function ContactPageContent() {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">Showroom</p>
-                      <p className="text-muted-foreground">
-                        URB. Pablo VI – II Etapa Mz N Lote 1, Arequipa – Perú
-                      </p>
+                      <p className="text-muted-foreground">{COMPANY_ADDRESS}</p>
                       <p className="text-xs text-muted-foreground/80">Demostraciones presenciales con cita previa.</p>
                     </div>
                   </div>
