@@ -2,8 +2,12 @@
 
 ```
 apolo-front/
+├── .env.local
 ├── .gitignore
 ├── app
+│   ├── api
+│   │   └── contact
+│   │       └── route.ts
 │   ├── contacto
 │   │   └── page.tsx
 │   ├── distribucion
@@ -92,6 +96,7 @@ apolo-front/
 ├── lib
 │   ├── products.ts
 │   └── utils.ts
+├── next-env.d.ts
 ├── next.config.mjs
 ├── package.json
 ├── pnpm-lock.yaml
@@ -150,8 +155,6 @@ apolo-front/
 │   ├── video-thumbnail.jpg
 │   └── videos
 │       └── presentation.mp4
-├── styles
-│   └── globals.css
 └── tsconfig.json
 ```
 
@@ -231,6 +234,7 @@ export default nextConfig
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
     "next-themes": "^0.4.6",
+    "nodemailer": "^7.0.10",
     "react": "^19",
     "react-day-picker": "9.8.0",
     "react-dom": "^19",
@@ -246,6 +250,7 @@ export default nextConfig
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
+    "@types/nodemailer": "^7.0.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8.5",
@@ -254,6 +259,7 @@ export default nextConfig
     "typescript": "^5"
   }
 }
+
 ```
 
 ## File: `tsconfig.json`
@@ -288,6 +294,16 @@ export default nextConfig
 
 ```
 
+## File: `.env.local`
+```local
+SMTP_HOST=smtppro.zoho.com
+SMTP_PORT=465
+SMTP_SECURE=true
+ZOHO_USER=ventas@apolomedical.com.pe
+ZOHO_PASS=uUpkw?z1
+CONTACT_TO=ventas@apolomedical.com.pe
+```
+
 ## File: `.gitignore`
 ```
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
@@ -319,35 +335,388 @@ yarn-error.log*
 next-env.d.ts
 ```
 
+## File: `app\api\contact\route.ts`
+```ts
+import nodemailer from "nodemailer"
+
+import { products } from "@/lib/products"
+
+export const runtime = "nodejs"
+
+type ContactPayload = {
+  name: string
+  email: string
+  phone: string
+  organization?: string
+  role?: string
+  product?: string
+  preferredSchedule?: string
+  contactMethod?: string
+  subscribeEvent?: boolean
+  message: string
+}
+
+const requiredFields: Array<keyof ContactPayload> = ["name", "email", "phone", "message"]
+
+export async function POST(req: Request) {
+  try {
+    const payload = (await req.json()) as Partial<ContactPayload>
+
+    for (const field of requiredFields) {
+      if (!payload[field] || String(payload[field]).trim() === "") {
+        return new Response(
+          JSON.stringify({ ok: false, error: `El campo ${String(field)} es obligatorio.` }),
+          { status: 400 },
+        )
+      }
+    }
+
+    if (!process.env.ZOHO_USER || !process.env.ZOHO_PASS || !process.env.SMTP_HOST) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "Configuración SMTP incompleta." }),
+        { status: 500 },
+      )
+    }
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT || 465),
+      secure: (process.env.SMTP_SECURE ?? "true") === "true",
+      auth: {
+        user: process.env.ZOHO_USER,
+        pass: process.env.ZOHO_PASS,
+      },
+    })
+
+    const productName = payload.product
+      ? products.find((product) => product.id === payload.product)?.name || payload.product
+      : undefined
+
+    const productSummary = productName ? `Producto de interés: ${productName}` : "Consulta general"
+
+    const scheduleLabels: Record<string, string> = {
+      sin_preferencia: "Sin preferencia",
+      manana: "Mañana (08:00 - 11:00)",
+      tarde: "Tarde (12:00 - 17:00)",
+      noche: "Noche (17:00 - 20:00)",
+    }
+
+    const contactMethodLabels: Record<string, string> = {
+      email: "Correo electrónico",
+      telefono: "Llamada telefónica",
+      whatsapp: "WhatsApp",
+    }
+
+    const scheduleSummary = payload.preferredSchedule
+      ? `\nHorario preferido: ${scheduleLabels[payload.preferredSchedule] ?? payload.preferredSchedule}`
+      : ""
+    const methodSummary = payload.contactMethod
+      ? `\nPreferencia de contacto: ${contactMethodLabels[payload.contactMethod] ?? payload.contactMethod}`
+      : ""
+    const organizationSummary = payload.organization ? `\nOrganización: ${payload.organization}` : ""
+    const roleSummary = payload.role ? `\nCargo: ${payload.role}` : ""
+    const eventSummary = payload.subscribeEvent ? "\nDesea recibir información del próximo evento." : ""
+
+    const subject = `Contacto — ${payload.name} (${productName || "Consulta"})`
+
+    const textBody = `Nuevo mensaje desde el formulario de contacto
+Nombre: ${payload.name}
+Email: ${payload.email}
+Teléfono: ${payload.phone}${organizationSummary}${roleSummary}
+${productSummary}${scheduleSummary}${methodSummary}${eventSummary}
+
+Mensaje:
+${payload.message}`
+
+    const htmlBody = `
+      <h2>Nuevo mensaje desde el formulario de contacto</h2>
+      <p><strong>Nombre:</strong> ${payload.name}</p>
+      <p><strong>Email:</strong> ${payload.email}</p>
+      <p><strong>Teléfono:</strong> ${payload.phone}</p>
+      ${payload.organization ? `<p><strong>Organización:</strong> ${payload.organization}</p>` : ""}
+      ${payload.role ? `<p><strong>Cargo:</strong> ${payload.role}</p>` : ""}
+      <p><strong>${productName ? "Producto de interés" : "Motivo"}:</strong> ${
+        productName || "Consulta general"
+      }</p>
+      ${payload.contactMethod ? `<p><strong>Preferencia de contacto:</strong> ${
+          contactMethodLabels[payload.contactMethod] ?? payload.contactMethod
+        }</p>` : ""}
+      ${payload.preferredSchedule ? `<p><strong>Horario preferido:</strong> ${
+          scheduleLabels[payload.preferredSchedule] ?? payload.preferredSchedule
+        }</p>` : ""}
+      ${payload.subscribeEvent ? `<p><strong>Evento:</strong> Desea información sobre el próximo evento.</p>` : ""}
+      <p><strong>Mensaje:</strong></p>
+      <p>${(payload.message ?? "").replace(/\n/g, "<br/>")}</p>
+    `
+
+    await transporter.sendMail({
+      from: `Apolo Medical HT <${process.env.ZOHO_USER}>`,
+      to: process.env.CONTACT_TO || process.env.ZOHO_USER,
+      replyTo: payload.email,
+      subject,
+      text: textBody,
+      html: htmlBody,
+    })
+
+    return new Response(JSON.stringify({ ok: true }), { status: 200 })
+  } catch (error) {
+    console.error("Error enviando contacto:", error)
+    return new Response(
+      JSON.stringify({ ok: false, error: "No se pudo enviar el mensaje en este momento." }),
+      { status: 500 },
+    )
+  }
+}
+
+```
+
 ## File: `app\contacto\page.tsx`
 ```tsx
 "use client"
 
-import type React from "react"
+import { Suspense, useEffect, useMemo, useRef } from "react"
+import { useSearchParams } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Mail, Phone, MapPin, MessageSquare, Linkedin, Instagram } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectSeparator,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { Mail, Phone, MapPin, MessageSquare, Linkedin, Instagram, CalendarClock, Megaphone, Clock } from "lucide-react"
 import { products } from "@/lib/products"
+import { useToast } from "@/hooks/use-toast"
 
-export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    product: "",
-    message: "",
+const contactSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(3, { message: "Ingresa tu nombre completo." })
+    .max(120, { message: "El nombre es demasiado largo." }),
+  email: z
+    .string()
+    .trim()
+    .email({ message: "Ingresa un correo válido." })
+    .max(160, { message: "El correo es demasiado largo." }),
+  phone: z
+    .string()
+    .trim()
+    .min(6, { message: "Incluye un número de contacto." })
+    .max(40, { message: "El número parece inválido." }),
+  organization: z
+    .string()
+    .trim()
+    .max(160, { message: "Máximo 160 caracteres." })
+    .optional()
+    .or(z.literal("")),
+  role: z
+    .string()
+    .trim()
+    .max(120, { message: "Máximo 120 caracteres." })
+    .optional()
+    .or(z.literal("")),
+  product: z.string().optional().or(z.literal("")),
+  message: z
+    .string()
+    .trim()
+    .min(12, { message: "Cuéntanos un poco más sobre tu necesidad." })
+    .max(1200, { message: "Máximo 1200 caracteres." }),
+  contactMethod: z.enum(["email", "telefono", "whatsapp"]),
+  preferredSchedule: z.enum(["sin_preferencia", "manana", "tarde", "noche"]),
+  subscribeEvent: z.boolean().default(false),
+})
+
+type ContactFormValues = z.infer<typeof contactSchema>
+
+const scheduleCopy: Record<ContactFormValues["preferredSchedule"], string> = {
+  sin_preferencia: "Sin preferencia",
+  manana: "Mañana (08:00 - 11:00)",
+  tarde: "Tarde (12:00 - 17:00)",
+  noche: "Noche (17:00 - 20:00)",
+}
+
+const contactMethodCopy: Record<ContactFormValues["contactMethod"], string> = {
+  email: "Correo electrónico",
+  telefono: "Llamada telefónica",
+  whatsapp: "WhatsApp",
+}
+
+const upcomingEvent = {
+  name: "Neuro Innovation Summit 2025",
+  date: "15 - 17 noviembre 2025",
+  location: "Lima, Perú",
+  description:
+    "Presentaremos soluciones innovadoras en neurocirugía y rehabilitación. Reserva tu lugar y recibe la agenda completa en tu correo.",
+  registrationUrl: "https://forms.gle/n-evento-apolo",
+}
+
+function buildProductMessage(productName?: string) {
+  if (!productName) {
+    return "Hola, me gustaría recibir asesoría sobre las soluciones disponibles y la mejor alternativa para mi centro médico."
+  }
+
+  return `Hola, estoy interesado en ${productName}. ¿Podrían enviarme ficha técnica, disponibilidad y condiciones comerciales?`
+}
+
+const messageTemplates = [
+  {
+    label: "Solicitar cotización",
+    build: (productName?: string) =>
+      productName
+        ? `Hola equipo Apolo, necesito una cotización detallada de ${productName}. Incluyan tiempos de entrega, garantía y opciones de capacitación.`
+        : "Hola equipo Apolo, necesito una cotización detallada de sus soluciones. Incluyan tiempos de entrega, garantía y opciones de capacitación.",
+  },
+  {
+    label: "Agendar demostración",
+    build: (productName?: string) =>
+      productName
+        ? `Buen día, me gustaría agendar una demostración técnica de ${productName} con mi equipo médico. ¿Qué fechas tienen disponibles?`
+        : "Buen día, me gustaría agendar una demostración técnica de sus equipos para mi equipo médico. ¿Qué fechas tienen disponibles?",
+  },
+  {
+    label: "Ser distribuidor",
+    build: () =>
+      "Hola, estoy interesado en convertirme en distribuidor autorizado de Apolo Medical. ¿Podrían compartir requisitos comerciales y soporte disponible?",
+  },
+]
+
+function ContactPageContent() {
+  const searchParams = useSearchParams()
+  const { toast } = useToast()
+  const hasPrefilledFromQuery = useRef(false)
+
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      organization: "",
+      role: "",
+      product: "",
+      message: buildProductMessage(),
+      contactMethod: "email",
+      preferredSchedule: "sin_preferencia",
+      subscribeEvent: false,
+    },
+    mode: "onBlur",
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission
-    console.log("Form submitted:", formData)
+  const selectedProductId = form.watch("product")
+  const selectedProduct = useMemo(
+    () => products.find((product) => product.id === selectedProductId),
+    [selectedProductId],
+  )
+  const messageValue = form.watch("message") ?? ""
+
+  useEffect(() => {
+    const productParam = searchParams.get("product")
+    if (!productParam || hasPrefilledFromQuery.current) {
+      return
+    }
+
+    const productMatch = products.find((product) => product.id === productParam)
+    if (productMatch) {
+      hasPrefilledFromQuery.current = true
+      form.setValue("product", productMatch.id, { shouldValidate: true })
+      if (!form.getValues("message") || form.getValues("message") === buildProductMessage()) {
+        form.setValue("message", buildProductMessage(productMatch.name), { shouldDirty: false })
+      }
+    }
+  }, [form, searchParams])
+
+  const groupedProducts = useMemo(() => {
+    const categories: Record<string, typeof products> = {}
+    products.forEach((product) => {
+      if (!categories[product.category]) {
+        categories[product.category] = []
+      }
+      categories[product.category].push(product)
+    })
+    return categories
+  }, [])
+
+  const onSubmit = async (values: ContactFormValues) => {
+    const payload = {
+      ...values,
+      organization: values.organization?.trim() ? values.organization.trim() : undefined,
+      role: values.role?.trim() ? values.role.trim() : undefined,
+      product: values.product?.trim() ? values.product : undefined,
+      message: values.message.trim(),
+    }
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "No se pudo enviar el mensaje.")
+      }
+
+      toast({
+        title: "Mensaje enviado",
+        description: "Nuestro equipo se pondrá en contacto en menos de 24 horas hábiles.",
+      })
+
+      form.reset({
+        name: "",
+        email: "",
+        phone: "",
+        organization: "",
+        role: "",
+        product: selectedProduct?.id ?? "",
+        message: selectedProduct ? buildProductMessage(selectedProduct.name) : buildProductMessage(),
+        contactMethod: values.contactMethod,
+        preferredSchedule: values.preferredSchedule,
+        subscribeEvent: values.subscribeEvent,
+      })
+    } catch (error) {
+      toast({
+        title: "No se pudo enviar",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Ocurrió un error inesperado. Intenta nuevamente en unos minutos.",
+        variant: "destructive",
+      })
+    }
   }
 
   const faqs = [
@@ -367,224 +736,509 @@ export default function ContactPage() {
     {
       question: "¿Cómo puedo convertirme en distribuidor?",
       answer:
-        "Contáctanos a través de este formulario o llámanos directamente para conocer los requisitos y condiciones.",
+        "Completa el formulario seleccionando 'Ser distribuidor' como motivo e indícanos tu empresa para agendar una reunión de evaluación.",
     },
   ]
 
+  const isSubmitting = form.formState.isSubmitting
+
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-primary/90 py-20 text-primary-foreground">
+      <section className="bg-gradient-to-br from-primary to-primary/85 py-20 text-primary-foreground">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="mb-6 text-4xl font-bold md:text-5xl text-balance">Contáctanos</h1>
-            <p className="text-lg text-primary-foreground/90 leading-relaxed text-pretty">
-              Estamos aquí para responder tus consultas y brindarte la mejor asesoría
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 text-center">
+            <div>
+              <Badge variant="secondary" className="mb-4 bg-primary/30 text-primary-foreground">
+                Red de especialistas en neurocirugía y columna
+              </Badge>
+              <h1 className="text-balance text-4xl font-bold md:text-5xl">Conversemos sobre tu próximo caso</h1>
+              <p className="mt-4 text-lg text-primary-foreground/90">
+                Conecta con consultores clínicos certificados, recibe propuestas personalizadas y coordina demos
+                prioritarias para tu equipo médico.
+              </p>
+            </div>
+            <Card className="border-white/30 bg-white/10 text-left backdrop-blur">
+              <CardHeader className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <CardTitle className="text-lg text-primary-foreground">{upcomingEvent.name}</CardTitle>
+                  <CardDescription className="text-primary-foreground/80">
+                    {upcomingEvent.description}
+                  </CardDescription>
+                </div>
+                <Badge variant="secondary" className="bg-white text-primary">
+                  Reservas abiertas
+                </Badge>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4 text-primary-foreground/90 md:flex-row md:items-center md:justify-between">
+                <div className="flex items-center gap-3">
+                  <CalendarClock className="h-5 w-5" />
+                  <div>
+                    <p className="font-semibold">{upcomingEvent.date}</p>
+                    <p className="text-sm opacity-90">{upcomingEvent.location}</p>
+                  </div>
+                </div>
+                <Button asChild variant="secondary" size="sm" className="bg-white text-primary">
+                  <a href={upcomingEvent.registrationUrl} target="_blank" rel="noopener noreferrer">
+                    Ver agenda preliminar
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,1fr)_380px]">
+            <Card className="border-border/60 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl text-foreground">Agenda una conversación personalizada</CardTitle>
+                <CardDescription>
+                  Responde el formulario y recibirá seguimiento en menos de un día hábil. Si vienes desde un producto,
+                  lo preseleccionamos para acelerar la asesoría.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nombre completo</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Dra. María Díaz" autoComplete="name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Correo electrónico</FormLabel>
+                            <FormControl>
+                              <Input placeholder="tu@centromedico.com" type="email" autoComplete="email" {...field} />
+                            </FormControl>
+                            <FormDescription>Usaremos este correo para enviarte fichas técnicas y seguimiento.</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Teléfono directo o WhatsApp</FormLabel>
+                            <FormControl>
+                              <Input placeholder="+51 999 999 999" type="tel" autoComplete="tel" {...field} />
+                            </FormControl>
+                            <FormDescription>Coordinaremos la llamada o demostración por este medio.</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="organization"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Centro médico / Clínica (opcional)</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Clínica Regional del Sur" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="role"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cargo (opcional)</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Jefe de Neurocirugía" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="product"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Producto de interés</FormLabel>
+                            <FormControl>
+                              <Select
+                                onValueChange={(value) => {
+                                  field.onChange(value)
+                                  const matchedProduct = products.find((product) => product.id === value)
+                                  if (matchedProduct) {
+                                    form.setValue("message", buildProductMessage(matchedProduct.name), {
+                                      shouldDirty: true,
+                                      shouldValidate: false,
+                                    })
+                                  }
+                                }}
+                                value={field.value}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Selecciona un producto" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="">
+                                    <span>Consulta general</span>
+                                  </SelectItem>
+                                  <SelectSeparator />
+                                  {Object.entries(groupedProducts).map(([category, items]) => (
+                                    <SelectGroup key={category}>
+                                      <SelectLabel>
+                                        {category === "neurocirugia"
+                                          ? "Neurocirugía"
+                                          : category === "columna"
+                                            ? "Columna"
+                                            : "Accesorios"}
+                                      </SelectLabel>
+                                      {items.map((product) => (
+                                        <SelectItem key={product.id} value={product.id}>
+                                          {product.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectGroup>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormDescription>
+                              {selectedProduct
+                                ? `Se enviará información específica sobre ${selectedProduct.name}.`
+                                : "Elige un producto para personalizar la asesoría."}
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <Separator className="my-2" />
+
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="contactMethod"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>¿Cómo prefieres que te contactemos?</FormLabel>
+                            <FormControl>
+                              <RadioGroup
+                                className="grid gap-3"
+                                value={field.value}
+                                onValueChange={(value) => field.onChange(value as ContactFormValues["contactMethod"])}
+                              >
+                                {Object.entries(contactMethodCopy).map(([value, label]) => (
+                                  <div
+                                    key={value}
+                                    className="flex items-center gap-3 rounded-lg border border-border/60 px-4 py-3"
+                                  >
+                                    <RadioGroupItem value={value} id={`contact-${value}`} />
+                                    <Label htmlFor={`contact-${value}`} className="cursor-pointer text-sm font-medium">
+                                      {label}
+                                    </Label>
+                                  </div>
+                                ))}
+                              </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="preferredSchedule"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Horario preferido</FormLabel>
+                            <FormControl>
+                              <Select
+                                value={field.value}
+                                onValueChange={(value) =>
+                                  field.onChange(value as ContactFormValues["preferredSchedule"])
+                                }
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Selecciona un horario" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Object.entries(scheduleCopy).map(([value, label]) => (
+                                    <SelectItem key={value} value={value}>
+                                      {label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormDescription>
+                              Ajustamos nuestra llamada a la agenda de tu equipo clínico.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mensaje</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder={buildProductMessage(selectedProduct?.name)}
+                              rows={6}
+                              maxLength={1200}
+                              {...field}
+                            />
+                          </FormControl>
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <FormDescription>
+                              Cuéntanos el contexto clínico, urgencia y si necesitas capacitación.
+                            </FormDescription>
+                            <span className="text-sm text-muted-foreground">
+                              {messageValue.length}/1200
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-3">
+                            {messageTemplates.map((template) => (
+                              <Button
+                                key={template.label}
+                                type="button"
+                                variant="secondary"
+                                size="sm"
+                                className="border-dashed"
+                                onClick={() =>
+                                  form.setValue("message", template.build(selectedProduct?.name), {
+                                    shouldDirty: true,
+                                    shouldValidate: true,
+                                  })
+                                }
+                              >
+                                {template.label}
+                              </Button>
+                            ))}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="subscribeEvent"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col gap-3">
+                          <div className="flex items-start gap-3 rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4">
+                            <Checkbox
+                              id="subscribeEvent"
+                              checked={field.value}
+                              onCheckedChange={(checked) => field.onChange(Boolean(checked))}
+                            />
+                            <div>
+                              <FormLabel htmlFor="subscribeEvent" className="inline-flex items-center gap-2 text-base">
+                                <Megaphone className="h-4 w-4" />
+                                Quiero recibir invitaciones prioritarias al evento {upcomingEvent.name}
+                              </FormLabel>
+                              <FormDescription>
+                                Te enviaremos agenda, speakers confirmados y acceso anticipado a demos en vivo.
+                              </FormDescription>
+                            </div>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                      {isSubmitting ? "Enviando..." : "Enviar mensaje"}
+                    </Button>
+
+                    <p className="text-center text-sm text-muted-foreground">
+                      Tiempo de respuesta promedio: &lt; 12 h hábiles. Nunca compartiremos tus datos con terceros.
+                    </p>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+
+            <div className="space-y-8 lg:sticky lg:top-24">
+              <Card className="border-border/60">
+                <CardHeader>
+                  <CardTitle className="text-xl text-foreground">Equipo de respuesta inmediata</CardTitle>
+                  <CardDescription>
+                    Nuestro equipo clínico y comercial está disponible para coordinar demos, cotizaciones y soporte post
+                    venta en todo el país.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-full bg-primary/10 p-3">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Correo principal</p>
+                      <a
+                        href="mailto:ventas@apolomedical.com.pe"
+                        className="text-muted-foreground transition-colors hover:text-primary"
+                      >
+                        ventas@apolomedical.com.pe
+                      </a>
+                      <p className="text-xs text-muted-foreground/80">Respuesta en menos de 24 horas hábiles.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-full bg-primary/10 p-3">
+                      <Phone className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Línea directa</p>
+                      <div className="space-y-1 text-muted-foreground">
+                        <a href="tel:+51957359298" className="hover:text-primary">
+                          (+51) 957 359 298
+                        </a>
+                        <a href="tel:+51958362601" className="hover:text-primary">
+                          (+51) 958 362 601
+                        </a>
+                      </div>
+                      <p className="text-xs text-muted-foreground/80">Atención emergencias quirúrgicas 24/7.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-full bg-primary/10 p-3">
+                      <MapPin className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Showroom</p>
+                      <p className="text-muted-foreground">
+                        URB. Pablo VI – II Etapa Mz N Lote 1, Arequipa – Perú
+                      </p>
+                      <p className="text-xs text-muted-foreground/80">Demostraciones presenciales con cita previa.</p>
+                    </div>
+                  </div>
+                  <Separator />
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-full bg-primary/10 p-3">
+                      <Clock className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Horario</p>
+                      <p className="text-muted-foreground">Lunes a viernes: 09:00 - 18:00</p>
+                      <p className="text-muted-foreground">Sábados: 09:00 - 13:00</p>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex gap-3">
+                      <Button variant="outline" size="icon" asChild>
+                        <a href="https://wa.me/51957359298" target="_blank" rel="noopener noreferrer">
+                          <MessageSquare className="h-5 w-5" />
+                        </a>
+                      </Button>
+                      <Button variant="outline" size="icon" asChild>
+                        <a href="https://www.linkedin.com/company/apolo-medical" target="_blank" rel="noopener noreferrer">
+                          <Linkedin className="h-5 w-5" />
+                        </a>
+                      </Button>
+                      <Button variant="outline" size="icon" asChild>
+                        <a href="https://www.instagram.com/apolo.medical" target="_blank" rel="noopener noreferrer">
+                          <Instagram className="h-5 w-5" />
+                        </a>
+                      </Button>
+                    </div>
+                    <Badge variant="secondary" className="bg-primary/10 text-primary">
+                      Tiempo medio de respuesta &lt; 12h
+                    </Badge>
+                  </div>
+                </CardFooter>
+              </Card>
+
+              <Card className="border-border/50">
+                <CardHeader>
+                  <CardTitle className="text-lg text-foreground">Preguntas frecuentes</CardTitle>
+                  <CardDescription>
+                    Respuestas rápidas a las consultas más comunes. Si no encuentras la tuya, completa el formulario.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {faqs.map((faq, index) => (
+                    <div key={faq.question} className="rounded-lg border border-border/60 bg-muted/30 p-4">
+                      <p className="font-semibold text-foreground">{faq.question}</p>
+                      <p className="text-sm text-muted-foreground">{faq.answer}</p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-muted/30 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-5xl text-center">
+            <h2 className="text-3xl font-semibold text-foreground">Visítanos en nuestra sede principal</h2>
+            <p className="mt-4 text-muted-foreground">
+              Coordinamos demostraciones presenciales y asesoría integral para equipos de neurocirugía, columna y trauma.
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* Contact Form & Info */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-6xl">
-            <div className="grid gap-12 lg:grid-cols-2">
-              {/* Contact Form */}
-              <div>
-                <h2 className="mb-6 text-2xl font-bold text-foreground">Envíanos un mensaje</h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nombre completo</Label>
-                    <Input
-                      id="name"
-                      placeholder="Tu nombre"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Correo electrónico</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="tu@email.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Teléfono</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+51 999 999 999"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="product">Producto de interés</Label>
-                    <Select
-                      value={formData.product}
-                      onValueChange={(value) => setFormData({ ...formData, product: value })}
-                    >
-                      <SelectTrigger id="product">
-                        <SelectValue placeholder="Selecciona un producto" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="general">Consulta general</SelectItem>
-                        {products.map((product) => (
-                          <SelectItem key={product.id} value={product.id}>
-                            {product.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Mensaje</Label>
-                    <Textarea
-                      id="message"
-                      placeholder="Cuéntanos cómo podemos ayudarte..."
-                      rows={5}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <Button type="submit" size="lg" className="w-full">
-                    Enviar mensaje
-                  </Button>
-                </form>
-              </div>
-
-              {/* Contact Information */}
-              <div className="space-y-8">
-                <div>
-                  <h2 className="mb-6 text-2xl font-bold text-foreground">Información de contacto</h2>
-                  <div className="space-y-6">
-                    <Card className="border-border/50">
-                      <CardContent className="flex items-start gap-4 p-6">
-                        <div className="rounded-full bg-primary/10 p-3">
-                          <Mail className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="mb-1 font-semibold text-foreground">Correo electrónico</h3>
-                          <a
-                            href="mailto:apolo.medicalht@gmail.com"
-                            className="text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            apolo.medicalht@gmail.com
-                          </a>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-border/50">
-                      <CardContent className="flex items-start gap-4 p-6">
-                        <div className="rounded-full bg-primary/10 p-3">
-                          <Phone className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="mb-1 font-semibold text-foreground">Teléfonos</h3>
-                          <div className="space-y-1 text-muted-foreground">
-                            <div>(+51) 957 359 298</div>
-                            <div>(+51) 958 362 601</div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-border/50">
-                      <CardContent className="flex items-start gap-4 p-6">
-                        <div className="rounded-full bg-primary/10 p-3">
-                          <MapPin className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="mb-1 font-semibold text-foreground">Dirección</h3>
-                          <p className="text-muted-foreground">URB. Pablo VI – II Etapa Mz N Lote 1, Arequipa – Perú</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-
-                {/* Social Media */}
-                <div>
-                  <h3 className="mb-4 font-semibold text-foreground">Síguenos en redes sociales</h3>
-                  <div className="flex gap-4">
-                    <Button variant="outline" size="icon" asChild>
-                      <a href="https://wa.me/51957359298" target="_blank" rel="noopener noreferrer">
-                        <MessageSquare className="h-5 w-5" />
-                      </a>
-                    </Button>
-                    <Button variant="outline" size="icon" asChild>
-                      <a href="#" target="_blank" rel="noopener noreferrer">
-                        <Linkedin className="h-5 w-5" />
-                      </a>
-                    </Button>
-                    <Button variant="outline" size="icon" asChild>
-                      <a href="#" target="_blank" rel="noopener noreferrer">
-                        <Instagram className="h-5 w-5" />
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Map Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-4xl">
-            <h2 className="mb-8 text-2xl font-bold text-foreground text-center">Nuestra ubicación</h2>
-            <div className="relative h-[400px] overflow-hidden rounded-lg">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3827.2!2d-71.537!3d-16.409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDI0JzMyLjQiUyA3McKwMzInMTMuMiJX!5e0!3m2!1sen!2spe!4v1234567890"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Ubicación de Apolo Medical HT"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="mb-8 text-2xl font-bold text-foreground text-center">Preguntas frecuentes</h2>
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
-                <Card key={index} className="border-border/50">
-                  <CardContent className="p-6">
-                    <h3 className="mb-2 font-semibold text-foreground">{faq.question}</h3>
-                    <p className="text-muted-foreground">{faq.answer}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+          <div className="mt-10 overflow-hidden rounded-xl border border-border/50 shadow-md">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3827.2!2d-71.537!3d-16.409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDI0JzMyLjQiUyA3McKwMzInMTMuMiJX!5e0!3m2!1ses!2spe!4v1234567890"
+              width="100%"
+              height="420"
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Ubicación de Apolo Medical HT"
+              style={{ border: 0 }}
+            />
           </div>
         </div>
       </section>
     </div>
+  )
+}
+
+function ContactPageFallback() {
+  return (
+    <div className="flex flex-col">
+      <section className="bg-gradient-to-br from-primary to-primary/85 py-20 text-primary-foreground">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-5xl animate-pulse rounded-3xl bg-white/10 p-12" />
+        </div>
+      </section>
+      <section className="bg-background py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto h-[720px] max-w-6xl animate-pulse rounded-3xl border border-border/40 bg-muted/30" />
+        </div>
+      </section>
+    </div>
+  )
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<ContactPageFallback />}>
+      <ContactPageContent />
+    </Suspense>
   )
 }
 
@@ -2355,16 +3009,12 @@ export function PartnerCarousel() {
         <div className="overflow-hidden">
           <div className="flex w-max gap-16 animate-marquee">
             {duplicatedPartners.map((partner, index) => (
-              <div
+              <img
                 key={`${partner.name}-${index}`}
-                className="flex-shrink-0 w-48 h-32 flex items-center justify-center bg-background rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6"
-              >
-                <img
-                  src={partner.logo || "/placeholder.svg"}
-                  alt={`Logo ${partner.name}`}
-                  className="max-h-full max-w-full object-contain"
-                />
-              </div>
+                src={partner.logo || "/placeholder.svg"}
+                alt={`Logo ${partner.name}`}
+                className="flex-shrink-0 h-32 object-contain"
+              />
             ))}
           </div>
         </div>
@@ -9904,6 +10554,16 @@ export function cn(...inputs: ClassValue[]) {
 
 ```
 
+## File: `next-env.d.ts`
+```ts
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+```
+
 ## File: `pnpm-lock.yaml`
 ```yaml
 lockfileVersion: '9.0'
@@ -10032,132 +10692,3 @@ _[Skipped: binary or non-UTF8 file]_
 _[Skipped: binary or non-UTF8 file]_
 ## File: `public\videos\presentation.mp4`
 _[Skipped: binary or non-UTF8 file]_
-## File: `styles\globals.css`
-```css
-@import 'tailwindcss';
-@import 'tw-animate-css';
-
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
-}
-
-@theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-```
