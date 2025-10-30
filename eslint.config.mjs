@@ -1,8 +1,16 @@
-import next from "eslint-config-next"
+import nextPlugin from "@next/eslint-plugin-next"
+
+const ignoredGlobs = [
+  "**/node_modules/**",
+  "**/.next/**",
+  "**/dist/**",
+  "**/out/**",
+  "pnpm-lock.yaml",
+]
 
 export default [
   {
-    ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**"],
+    ignores: ignoredGlobs,
   },
-  ...next,
+  nextPlugin.configs["core-web-vitals"],
 ]

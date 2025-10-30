@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -35,12 +36,24 @@ export function Navigation() {
       >
         <div className="container mx-auto px-4">
           <div className="flex h-24 items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3 group">
+            <Link href="/" className="flex items-center gap-3 group" aria-label="Apolo Medical HT S.A.C.">
+              <div className="relative h-14 w-14 flex-shrink-0">
+                <Image
+                  src="/logos/apolo-logo.jpeg"
+                  alt="Logotipo de Apolo Medical"
+                  fill
+                  priority
+                  className="object-contain transition-smooth group-hover:scale-105"
+                  sizes="56px"
+                />
+              </div>
               <div className="flex flex-col">
-                <span className="text-3xl font-heading font-bold text-primary tracking-tight group-hover:text-primary/80 transition-smooth">
+                <span className="text-2xl font-heading font-bold text-primary tracking-tight group-hover:text-primary/80 transition-smooth">
                   Apolo Medical
                 </span>
-                <span className="text-sm font-semibold text-muted-foreground tracking-widest uppercase">HT S.A.C.</span>
+                <span className="text-xs font-semibold text-muted-foreground tracking-[0.25em] uppercase">
+                  HT S.A.C.
+                </span>
               </div>
             </Link>
 
@@ -54,10 +67,11 @@ export function Navigation() {
                   {link.label}
                 </Link>
               ))}
+
               <Button
                 asChild
                 size="lg"
-                className="ml-2 font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-smooth"
+                className="font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-smooth"
               >
                 <Link href="/contacto">Contacto</Link>
               </Button>
@@ -83,7 +97,7 @@ export function Navigation() {
                     {link.label}
                   </Link>
                 ))}
-                <Button asChild size="lg" className="mt-2 font-semibold">
+                <Button asChild size="lg" className="mt-2 font-semibold text-base py-6">
                   <Link href="/contacto" onClick={() => setIsOpen(false)}>
                     Contacto
                   </Link>

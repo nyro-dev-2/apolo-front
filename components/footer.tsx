@@ -1,5 +1,7 @@
 import { Mail, Phone, MapPin } from "lucide-react"
 
+import { COMPANY_ADDRESS } from "@/lib/company-info"
+
 export function Footer() {
   const partners = ["ENDAC", "PRODORTH", "SCIENCEMEDIC", "HC BIOLOGICS", "BONETECH"]
 
@@ -36,7 +38,7 @@ export function Footer() {
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>URB. Pablo VI – II Etapa Mz N Lote 1, Arequipa – Perú</span>
+                <span>{COMPANY_ADDRESS}</span>
               </div>
             </div>
           </div>

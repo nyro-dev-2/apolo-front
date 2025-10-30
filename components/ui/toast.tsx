@@ -16,7 +16,7 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      'fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]',
+      'pointer-events-none fixed inset-x-0 top-6 z-[100] mx-auto flex w-full max-w-lg flex-col gap-4 px-4 sm:max-w-xl',
       className,
     )}
     {...props}
@@ -25,13 +25,14 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName
 
 const toastVariants = cva(
-  'group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
+  'group pointer-events-auto relative flex w-full flex-col items-center gap-3 overflow-hidden rounded-3xl border px-6 py-5 text-center shadow-[0_28px_60px_-24px_rgba(8,47,73,0.65)] ring-1 backdrop-blur-xl transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-top-full data-[state=open]:fade-in-80 data-[state=open]:slide-in-from-top-full sm:flex-row sm:items-center sm:gap-5 sm:text-left',
   {
     variants: {
       variant: {
-        default: 'border bg-background text-foreground',
+        default:
+          'border-primary/25 bg-gradient-to-br from-primary to-primary/85 text-primary-foreground ring-primary/20 shadow-[0_28px_60px_-20px_rgba(8,47,73,0.5)]',
         destructive:
-          'destructive group border-destructive bg-destructive text-destructive-foreground',
+          'destructive group border-destructive/30 bg-gradient-to-br from-destructive to-destructive/80 text-destructive-foreground ring-destructive/25 shadow-[0_28px_60px_-20px_rgba(127,29,29,0.55)]',
       },
     },
     defaultVariants: {
@@ -77,7 +78,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
+      'absolute right-3 top-3 rounded-full bg-white/10 p-1.5 text-primary-foreground/80 transition hover:bg-white/20 hover:text-primary-foreground focus:outline-none focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-primary group-[.destructive]:bg-destructive-foreground/15 group-[.destructive]:text-destructive-foreground group-[.destructive]:hover:bg-destructive-foreground/25 group-[.destructive]:focus:ring-destructive-foreground/50 group-[.destructive]:focus:ring-offset-destructive',
       className,
     )}
     toast-close=""
@@ -94,7 +95,7 @@ const ToastTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Title
     ref={ref}
-    className={cn('text-sm font-semibold', className)}
+    className={cn('text-base font-semibold tracking-tight', className)}
     {...props}
   />
 ))
@@ -106,7 +107,10 @@ const ToastDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Description
     ref={ref}
-    className={cn('text-sm opacity-90', className)}
+    className={cn(
+      'text-sm leading-relaxed text-primary-foreground/90 group-[.destructive]:text-destructive-foreground/90',
+      className,
+    )}
     {...props}
   />
 ))
