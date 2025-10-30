@@ -1,8 +1,7 @@
 "use client"
 
-import { MessageCircle, X } from "lucide-react"
+import { MessageCircle } from "lucide-react"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 
 /**
  * Floating WhatsApp button component
@@ -49,12 +48,12 @@ export function WhatsAppButton() {
         <MessageCircle className="h-7 w-7" strokeWidth={2} />
         
         {/* Pulse animation */}
-        <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-75" />
+        <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-75" aria-hidden="true" />
       </div>
       
       {/* Active indicator badge */}
       <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-green-400 border-2 border-white shadow-md">
-        <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse" />
+        <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse" aria-hidden="true" />
       </div>
     </a>
   )
