@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -110,10 +111,12 @@ export default function NewsPage() {
                 >
                   <CardHeader className="p-0">
                     <div className="relative h-48 w-full overflow-hidden rounded-t-lg bg-muted">
-                      <img
+                      <Image
                         src={article.image || "/placeholder.svg"}
                         alt={article.title}
-                        className="h-full w-full object-cover transition-transform hover:scale-105"
+                        fill
+                        className="object-cover transition-transform hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                     </div>
                   </CardHeader>
@@ -153,10 +156,12 @@ export default function NewsPage() {
                   className="border-border/50 hover:border-primary/50 transition-all overflow-hidden"
                 >
                   <div className="relative h-48 w-full bg-muted group cursor-pointer">
-                    <img
+                    <Image
                       src={video.thumbnail || "/placeholder.svg"}
                       alt={video.title}
-                      className="h-full w-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     <div className="absolute inset-0 bg-white/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="rounded-full bg-primary p-4">

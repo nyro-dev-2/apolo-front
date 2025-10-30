@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Target, Eye, Award, Users, CheckCircle2 } from "lucide-react"
 
@@ -97,10 +99,13 @@ export default function AboutPage() {
           <div className="mx-auto max-w-4xl">
             <div className="grid gap-12 md:grid-cols-2 md:items-center">
               <div className="relative h-[400px] overflow-hidden rounded-lg order-2 md:order-1">
-                <img
+                <Image
+                  fill
                   src="/quality-control-medical-devices-laboratory.jpg"
-                  alt="Control de calidad"
-                  className="h-full w-full object-cover"
+                  alt="Profesional verificando dispositivos médicos en laboratorio"
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
                 />
               </div>
               <div className="order-1 md:order-2">
@@ -150,10 +155,13 @@ export default function AboutPage() {
                 </ul>
               </div>
               <div className="relative h-[400px] overflow-hidden rounded-lg">
-                <img
+                <Image
+                  fill
                   src="/medical-team-consultation-hospital.jpg"
-                  alt="Equipo médico"
-                  className="h-full w-full object-cover"
+                  alt="Equipo médico consultando en hospital"
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  loading="lazy"
                 />
               </div>
             </div>

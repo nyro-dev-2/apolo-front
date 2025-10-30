@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 export function PartnerCarousel() {
   const partners = [
     { name: "ENDAC", logo: "/logos/endac-logo.png" },
@@ -29,11 +31,14 @@ export function PartnerCarousel() {
         <div className="overflow-hidden">
           <div className="flex w-max gap-16 animate-marquee">
             {duplicatedPartners.map((partner, index) => (
-              <img
+              <Image
                 key={`${partner.name}-${index}`}
                 src={partner.logo || "/placeholder.svg"}
                 alt={`Logo ${partner.name}`}
-                className="flex-shrink-0 h-32 object-contain"
+                width={200}
+                height={128}
+                className="flex-shrink-0 h-32 w-auto object-contain"
+                sizes="(max-width: 768px) 50vw, 200px"
               />
             ))}
           </div>

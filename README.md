@@ -96,15 +96,17 @@ Tipo `Product` (resumen):
 - `id: string` (slug identificador, usado en rutas)
 - `name: string`
 - `category: 'neurocirugia' | 'columna' | 'accesorios'`
+- `manufacturer: string`
 - `shortDescription`, `fullDescription`
 - `features: string[]`
 - `specifications?: { label: string; value: string }[]`
 - `images: string[]` (rutas en `public/products/`)
 - `videoUrl?`, `pdfUrl?`
+- `keywords?: string[]`
 
 Funciones exportadas:
 - `getProductById(id: string)` — devuelve un producto o `undefined`.
-- `getProductsByCategory(category: string)` — filtra por categoría.
+- `getProductsByCategory(category: ProductCategory)` — filtra por categoría.
 
 Cómo añadir/editar productos:
 1. Añade las imágenes (y videos/PDF) correspondientes en `public/products/`.
