@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useMemo, useRef } from "react"
+import { Suspense, useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -36,12 +36,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { Mail, Phone, MapPin, MessageSquare, Linkedin, Instagram, CalendarClock, Megaphone, Clock } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Mail, Phone, MapPin, MessageSquare, Linkedin, Instagram, Clock } from "lucide-react"
 import { products } from "@/lib/products"
 import { useToast } from "@/hooks/use-toast"
 
@@ -81,7 +81,6 @@ const contactSchema = z.object({
     .max(1200, { message: "Máximo 1200 caracteres." }),
   contactMethod: z.enum(["email", "telefono", "whatsapp"]),
   preferredSchedule: z.enum(["sin_preferencia", "manana", "tarde", "noche"]),
-  subscribeEvent: z.boolean().default(false),
 })
 
 type ContactFormValues = z.infer<typeof contactSchema>
@@ -97,15 +96,6 @@ const contactMethodCopy: Record<ContactFormValues["contactMethod"], string> = {
   email: "Correo electrónico",
   telefono: "Llamada telefónica",
   whatsapp: "WhatsApp",
-}
-
-const upcomingEvent = {
-  name: "Neuro Innovation Summit 2025",
-  date: "15 - 17 noviembre 2025",
-  location: "Lima, Perú",
-  description:
-    "Presentaremos soluciones innovadoras en neurocirugía y rehabilitación. Reserva tu lugar y recibe la agenda completa en tu correo.",
-  registrationUrl: "https://forms.gle/n-evento-apolo",
 }
 
 function buildProductMessage(productName?: string) {
@@ -142,9 +132,15 @@ function ContactPageContent() {
   const searchParams = useSearchParams()
   const { toast } = useToast()
   const hasPrefilledFromQuery = useRef(false)
+  const [formFeedback, setFormFeedback] = useState<
+    { status: "success" | "error"; message: string }
+  | null>(null)
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
+    mode: "onChange",
+    reValidateMode: "onBlur",
+    shouldFocusError: true,
     defaultValues: {
       name: "",
       email: "",
@@ -155,9 +151,7 @@ function ContactPageContent() {
       message: buildProductMessage(),
       contactMethod: "email",
       preferredSchedule: "sin_preferencia",
-      subscribeEvent: false,
     },
-    mode: "onBlur",
   })
 
   const selectedProductId = form.watch("product")
@@ -195,6 +189,8 @@ function ContactPageContent() {
   }, [])
 
   const onSubmit = async (values: ContactFormValues) => {
+    setFormFeedback(null)
+
     const payload = {
       ...values,
       organization: values.organization?.trim() ? values.organization.trim() : undefined,
@@ -216,6 +212,10 @@ function ContactPageContent() {
         throw new Error(data.error || "No se pudo enviar el mensaje.")
       }
 
+      setFormFeedback({
+        status: "success",
+        message: "¡Mensaje enviado! Nos pondremos en contacto en menos de 24 horas hábiles.",
+      })
       toast({
         title: "Mensaje enviado",
         description: "Nuestro equipo se pondrá en contacto en menos de 24 horas hábiles.",
@@ -231,15 +231,15 @@ function ContactPageContent() {
         message: selectedProduct ? buildProductMessage(selectedProduct.name) : buildProductMessage(),
         contactMethod: values.contactMethod,
         preferredSchedule: values.preferredSchedule,
-        subscribeEvent: values.subscribeEvent,
       })
     } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Ocurrió un error inesperado. Intenta nuevamente en unos minutos."
+
+      setFormFeedback({ status: "error", message })
       toast({
         title: "No se pudo enviar",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Ocurrió un error inesperado. Intenta nuevamente en unos minutos.",
+        description: message,
         variant: "destructive",
       })
     }
@@ -283,33 +283,21 @@ function ContactPageContent() {
                 prioritarias para tu equipo médico.
               </p>
             </div>
-            <Card className="border-white/30 bg-white/10 text-left backdrop-blur">
-              <CardHeader className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <CardTitle className="text-lg text-primary-foreground">{upcomingEvent.name}</CardTitle>
-                  <CardDescription className="text-primary-foreground/80">
-                    {upcomingEvent.description}
-                  </CardDescription>
-                </div>
-                <Badge variant="secondary" className="bg-white text-primary">
-                  Reservas abiertas
-                </Badge>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4 text-primary-foreground/90 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center gap-3">
-                  <CalendarClock className="h-5 w-5" />
-                  <div>
-                    <p className="font-semibold">{upcomingEvent.date}</p>
-                    <p className="text-sm opacity-90">{upcomingEvent.location}</p>
-                  </div>
-                </div>
-                <Button asChild variant="secondary" size="sm" className="bg-white text-primary">
-                  <a href={upcomingEvent.registrationUrl} target="_blank" rel="noopener noreferrer">
-                    Ver agenda preliminar
-                  </a>
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="mt-2 flex flex-wrap justify-center gap-4">
+              <Button size="lg" className="px-8 py-6 text-base" asChild>
+                <a href="#contacto-form">Agenda una consultoría</a>
+              </Button>
+              <Button
+                size="lg"
+                variant="secondary"
+                className="bg-white text-primary hover:bg-white/90 px-8 py-6 text-base"
+                asChild
+              >
+                <a href="https://wa.me/51957359298" target="_blank" rel="noopener noreferrer">
+                  Escríbenos por WhatsApp
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -317,17 +305,26 @@ function ContactPageContent() {
       <section className="bg-background py-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,1fr)_380px]">
-            <Card className="border-border/60 shadow-lg">
+            <Card id="contacto-form" className="border-border/60 shadow-lg">
               <CardHeader>
                 <CardTitle className="text-2xl text-foreground">Agenda una conversación personalizada</CardTitle>
                 <CardDescription>
-                  Responde el formulario y recibirá seguimiento en menos de un día hábil. Si vienes desde un producto,
+                  Responde el formulario y recibirás seguimiento en menos de un día hábil. Si vienes desde un producto,
                   lo preseleccionamos para acelerar la asesoría.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+                      {formFeedback && (
+                        <Alert variant={formFeedback.status === "success" ? "default" : "destructive"}>
+                          <AlertTitle>
+                            {formFeedback.status === "success" ? "Mensaje enviado" : "Hubo un problema"}
+                          </AlertTitle>
+                          <AlertDescription>{formFeedback.message}</AlertDescription>
+                        </Alert>
+                      )}
+
                     <div className="grid gap-6 md:grid-cols-2">
                       <FormField
                         control={form.control}
@@ -574,32 +571,6 @@ function ContactPageContent() {
                                 {template.label}
                               </Button>
                             ))}
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="subscribeEvent"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col gap-3">
-                          <div className="flex items-start gap-3 rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4">
-                            <Checkbox
-                              id="subscribeEvent"
-                              checked={field.value}
-                              onCheckedChange={(checked) => field.onChange(Boolean(checked))}
-                            />
-                            <div>
-                              <FormLabel htmlFor="subscribeEvent" className="inline-flex items-center gap-2 text-base">
-                                <Megaphone className="h-4 w-4" />
-                                Quiero recibir invitaciones prioritarias al evento {upcomingEvent.name}
-                              </FormLabel>
-                              <FormDescription>
-                                Te enviaremos agenda, speakers confirmados y acceso anticipado a demos en vivo.
-                              </FormDescription>
-                            </div>
                           </div>
                           <FormMessage />
                         </FormItem>

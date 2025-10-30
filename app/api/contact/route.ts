@@ -13,7 +13,6 @@ type ContactPayload = {
   product?: string
   preferredSchedule?: string
   contactMethod?: string
-  subscribeEvent?: boolean
   message: string
 }
 
@@ -76,15 +75,13 @@ export async function POST(req: Request) {
       : ""
     const organizationSummary = payload.organization ? `\nOrganización: ${payload.organization}` : ""
     const roleSummary = payload.role ? `\nCargo: ${payload.role}` : ""
-    const eventSummary = payload.subscribeEvent ? "\nDesea recibir información del próximo evento." : ""
-
     const subject = `Contacto — ${payload.name} (${productName || "Consulta"})`
 
     const textBody = `Nuevo mensaje desde el formulario de contacto
 Nombre: ${payload.name}
 Email: ${payload.email}
 Teléfono: ${payload.phone}${organizationSummary}${roleSummary}
-${productSummary}${scheduleSummary}${methodSummary}${eventSummary}
+  ${productSummary}${scheduleSummary}${methodSummary}
 
 Mensaje:
 ${payload.message}`
@@ -105,7 +102,6 @@ ${payload.message}`
       ${payload.preferredSchedule ? `<p><strong>Horario preferido:</strong> ${
           scheduleLabels[payload.preferredSchedule] ?? payload.preferredSchedule
         }</p>` : ""}
-      ${payload.subscribeEvent ? `<p><strong>Evento:</strong> Desea información sobre el próximo evento.</p>` : ""}
       <p><strong>Mensaje:</strong></p>
       <p>${(payload.message ?? "").replace(/\n/g, "<br/>")}</p>
     `
