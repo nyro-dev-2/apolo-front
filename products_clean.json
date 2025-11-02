@@ -1,0 +1,106 @@
+[
+  {
+    "_type": "product",
+    "name": "Placa Cervical Anterior PROCTOPUS™",
+    "slug": { "_type": "slug", "current": "placa-cervical-anterior-proctopus" },
+    "category": "columna",
+    "manufacturer": "Prodorth",
+    "shortDescription": "Sistema de placas cervicales anteriores de bajo perfil y fijación segura para cirugía cervical anterior.",
+    "fullDescription": "El sistema anterior cervical PROCTOPUS™ está diseñado para cumplir con las expectativas clínicas de la cirugía cervical anterior, ofreciendo una amplia gama de placas y tornillos. Su diseño de bajo perfil (2,0 mm), precurvado anatómicamente, permite una colocación precisa y segura. El sistema utiliza un único destornillador tanto para insertar los tornillos como para activar el mecanismo de bloqueo simplificado. Los tornillos autoperforantes y autorroscantes garantizan una alta resistencia a la tracción, mientras que las amplias ventanas de injerto facilitan la visualización y la fusión ósea.",
+    "features": [
+      { "value": "Placas de perfil bajo (2,0 mm) precurvadas anatómicamente" },
+      { "value": "Mecanismo de bloqueo simplificado con un solo instrumento" },
+      { "value": "Tornillos autorroscantes con alta resistencia al arranque" },
+      { "value": "Variedad de longitudes y diámetros de tornillos y placas" },
+      { "value": "Identificación por colores para cada tipo de tornillo" },
+      { "value": "Espacios amplios para injerto óseo y mejor visibilidad intraoperatoria" },
+      { "value": "Material: Aleación de titanio Ti6Al4V-ELI (Grado 23, ASTM F136 / ISO 5832-3)" }
+    ],
+    "images": [
+      { "asset": { "_type": "reference", "_ref": "placa-cervical-anterior-proctopus-1.png" } },
+      { "asset": { "_type": "reference", "_ref": "placa-cervical-anterior-proctopus-2.png" } }
+    ]
+  },
+
+  {
+    "_type": "product",
+    "name": "Prótesis de Disco Cervical PROCORAL™",
+    "slug": { "_type": "slug", "current": "protesis-disco-cervical-procoral" },
+    "category": "columna",
+    "manufacturer": "Prodorth",
+    "shortDescription": "Prótesis de disco cervical de una sola pieza con diseño anatómico y preservación del movimiento.",
+    "fullDescription": "La prótesis de disco cervical PROCORAL™ permite la preservación del movimiento fisiológico del segmento cervical tras una discectomía. Fabricada con aleación de titanio Ti6Al4V-ELI (Grado 23) y componentes internos de PEEK suministrados por EVONIK Industries (Alemania), su mecanismo interno suave garantiza un movimiento controlado en flexión, extensión, inclinación lateral y rotación. Su diseño anatómico monobloque evita la fusión ósea dentro del implante y proporciona una conexión estable y duradera.",
+    "features": [
+      { "value": "Diseño anatómico monobloque" },
+      { "value": "Componente interno de PEEK con superficie ultralisa" },
+      { "value": "Anillo de PEEK externo que previene la fusión ósea intraimplante" },
+      { "value": "Preservación completa del movimiento en múltiples ejes" },
+      { "value": "Superficie anodizada oscura y opción rugosa" },
+      { "value": "Material: Ti6Al4V-ELI (Grado 23) y PEEK (EVONIK Industries, Alemania)" }
+    ],
+    "images": [
+      { "asset": { "_type": "reference", "_ref": "protesis-disco-cervical-procoral-1.png" } },
+      { "asset": { "_type": "reference", "_ref": "protesis-disco-cervical-procoral-2.png" } }
+    ]
+  },
+
+  {
+    "_type": "product",
+    "name": "Caja Intersomática Anterior PEEK PROYSTER™",
+    "slug": { "_type": "slug", "current": "caja-intersomatica-anterior-peek-proyster" },
+    "category": "columna",
+    "manufacturer": "Prodorth",
+    "shortDescription": "Caja intersomática cervical de una sola pieza PEEK, anatómica y radiolúcida.",
+    "fullDescription": "La caja cervical anterior PROYSTER™ está fabricada completamente en PEEK de grado médico (EVONIK Industries, Alemania). Su geometría anatómica y superficie dentada garantizan una sujeción firme y estable sin componentes metálicos, optimizando la fusión ósea y la visibilidad radiográfica gracias a su transparencia al rayos X.",
+    "features": [
+      { "value": "Fabricación 100% en PEEK radiolúcido" },
+      { "value": "Superficie dentada antideslizante que previene la migración" },
+      { "value": "Diseño anatómico y gran volumen de espacio para fusión" },
+      { "value": "Marcadores radiopacos para visibilidad intraoperatoria" },
+      { "value": "Compatibilidad total con control radiológico postoperatorio" }
+    ],
+    "images": [
+      { "asset": { "_type": "reference", "_ref": "caja-intersomatica-anterior-peek-proyster-1.png" } }
+    ]
+  },
+
+  {
+    "_type": "product",
+    "name": "Caja Intersomática Anterior PEEK Bladed PROYSTER-M™",
+    "slug": { "_type": "slug", "current": "caja-intersomatica-anterior-peek-bladed-proyster-m" },
+    "category": "columna",
+    "manufacturer": "Prodorth",
+    "shortDescription": "Caja PEEK cervical con cuchilla metálica integrada para mayor estabilidad sin necesidad de placa.",
+    "fullDescription": "La caja cervical anterior PROYSTER-M™ incorpora una cuchilla metálica (blade) integrada que mejora el anclaje en las placas terminales vertebrales, eliminando la necesidad de una placa adicional. Fabricada en PEEK con componentes metálicos de titanio, ofrece un equilibrio ideal entre fijación mecánica y visibilidad radiológica.",
+    "features": [
+      { "value": "Cuchilla metálica integrada para mejor anclaje" },
+      { "value": "Fabricación principal en PEEK con insertos de titanio" },
+      { "value": "Diseño anatómico con gran espacio de fusión" },
+      { "value": "Superficie dentada que previene desplazamientos" },
+      { "value": "Marcadores radiopacos integrados" }
+    ],
+    "images": [
+      { "asset": { "_type": "reference", "_ref": "caja-intersomatica-anterior-peek-bladed-proyster-m-1.png" } }
+    ]
+  },
+
+  {
+    "_type": "product",
+    "name": "Caja Intersomática Anterior PEEK Stand-Alone PROYSTER-D™",
+    "slug": { "_type": "slug", "current": "caja-intersomatica-anterior-peek-standalone-proyster-d" },
+    "category": "columna",
+    "manufacturer": "Prodorth",
+    "shortDescription": "Caja PEEK cervical con doble cuchilla metálica para fijación autónoma (stand-alone).",
+    "fullDescription": "El modelo PROYSTER-D™ representa la versión stand-alone del sistema cervical PEEK de Prodorth. Con doble cuchilla metálica lateral, ofrece una fijación estable sin necesidad de placa cervical adicional. Su diseño anatómico optimiza el contacto con las placas vertebrales y su estructura PEEK radiolúcida permite un control visual de la fusión ósea durante el seguimiento postoperatorio.",
+    "features": [
+      { "value": "Doble cuchilla metálica (stand-alone)" },
+      { "value": "Fijación autónoma sin placa anterior" },
+      { "value": "Gran superficie de fusión ósea y radiolucidez total" },
+      { "value": "Anclaje seguro y resistente a torsión" },
+      { "value": "Materiales: PEEK (EVONIK) y titanio Ti6Al4V-ELI" }
+    ],
+    "images": [
+      { "asset": { "_type": "reference", "_ref": "caja-intersomatica-anterior-peek-standalone-proyster-d-1.png" } }
+    ]
+  }
+]

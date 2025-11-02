@@ -1,7 +1,5 @@
 import nodemailer from "nodemailer"
 
-import { products } from "@/lib/products"
-
 export const runtime = "nodejs"
 
 type ContactPayload = {
@@ -57,10 +55,10 @@ export async function POST(req: Request) {
       },
     })
 
-    const productName = payload.product
-      ? products.find((product) => product.id === payload.product)?.name || payload.product
-      : undefined
-
+    const productName =
+      payload.product && payload.product.trim() !== "" && payload.product !== "__general__"
+        ? payload.product
+        : undefined
     const productSummary = productName ? `Producto de interés: ${productName}` : "Consulta general"
 
     const scheduleLabels: Record<string, string> = {

@@ -344,7 +344,6 @@ next-env.d.ts
 ```ts
 import nodemailer from "nodemailer"
 
-import { products } from "@/lib/products"
 
 export const runtime = "nodejs"
 

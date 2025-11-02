@@ -8,7 +8,16 @@ const nextConfig = {
   },
   images: {
     unoptimized: false,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        port: "",
+        pathname: "/images/**",
+      },
+    ],
   },
+  reactStrictMode: true,
 }
 
 export default nextConfig
