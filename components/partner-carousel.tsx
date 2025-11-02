@@ -6,17 +6,16 @@ export function PartnerCarousel() {
   const partners = [
     { name: "ENDAC", logo: "/logos/endac-logo.png" },
     { name: "PRODORTH", logo: "/logos/prodorth-logo.png" },
-    { name: "SCIENCEMEDIC", logo: "/logos/sciencemedic-logo.jpg" },
-    { name: "HC BIOLOGICS", logo: "/logos/hcbiologics_logo.jpg" },
-    { name: "BONETECH", logo: "/logos/bonetech-logo.png" },
+    { name: "HC BIOLOGICS", logo: "/logos/hcbiologics_logo.png" },
+    { name: "SCIENCE MEDIC", logo: "/logos/Science_Medic.png" },
+    { name: "GESCO", logo: "/logos/gesco_logo.png" },
   ]
 
-  // Duplicamos muchas veces para que el salto sea muy infrecuente
   const duplicatedPartners = [...partners, ...partners, ...partners, ...partners, 
                              ...partners, ...partners, ...partners, ...partners]
 
   return (
-    <div className="relative overflow-hidden bg-muted/30 py-12">
+    <div className="relative overflow-hidden bg-secondary/30 py-12">
       <div className="container mx-auto px-4 mb-8">
         <h2 className="text-3xl font-serif font-bold text-center text-foreground mb-3">Socios Internacionales</h2>
         <p className="text-center text-muted-foreground text-lg max-w-2xl mx-auto">

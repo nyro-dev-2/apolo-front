@@ -45,7 +45,11 @@ export function WhatsAppButton() {
           isHovered ? "ring-4 ring-[#25D366]/30" : ""
         }`}
       >
-        <MessageCircle className="h-7 w-7" strokeWidth={2} />
+        <img 
+          src="/whatsappicon.png" 
+          alt="WhatsApp" 
+          className="h-9 w-9" 
+        />
         
         {/* Pulse animation */}
         <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-75" aria-hidden="true" />

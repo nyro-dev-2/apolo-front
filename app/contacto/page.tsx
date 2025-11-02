@@ -282,27 +282,34 @@ function ContactPageContent() {
 
   return (
     <div className="flex flex-col">
-      <section className="bg-gradient-to-br from-primary to-primary/85 py-20 text-primary-foreground">
-        <div className="container mx-auto px-4">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-secondary py-24 text-primary-foreground">
+        <div className="absolute inset-0 bg-[url('/medical-pattern.svg')] opacity-10" aria-hidden="true" />
+        <div className="container relative mx-auto px-4">
           <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 text-center">
-            <div>
-              <Badge variant="secondary" className="mb-4 bg-primary/30 text-primary-foreground">
-                Red de especialistas en neurocirugía y columna
-              </Badge>
-              <h1 className="text-balance text-4xl font-bold md:text-5xl">Conversemos sobre tu próximo caso</h1>
-              <p className="mt-4 text-lg text-primary-foreground/90">
+            <Badge variant="secondary" className="border-white/30 bg-white/20 text-white">
+              Red de especialistas en neurocirugía y columna
+            </Badge>
+            <div className="space-y-4">
+              <h1 className="text-balance font-serif text-5xl font-semibold md:text-6xl">
+                Conversemos sobre tu próximo caso
+              </h1>
+              <p className="mx-auto max-w-3xl text-pretty text-lg leading-relaxed text-primary-foreground/90 md:text-xl">
                 Conecta con consultores clínicos certificados, recibe propuestas personalizadas y coordina demos
                 prioritarias para tu equipo médico.
               </p>
             </div>
-            <div className="mt-2 flex flex-wrap justify-center gap-4">
-              <Button size="lg" className="px-8 py-6 text-base" asChild>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button
+                size="lg"
+                className="transition-smooth hover:scale-105 text-lg px-8 py-6"
+                asChild
+              >
                 <a href="#contacto-form">Agenda una consultoría</a>
               </Button>
               <Button
                 size="lg"
                 variant="secondary"
-                className="bg-white text-primary hover:bg-white/90 px-8 py-6 text-base"
+                className="transition-smooth hover:scale-105 text-lg px-8 py-6 bg-white text-primary hover:bg-white/90"
                 asChild
               >
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
