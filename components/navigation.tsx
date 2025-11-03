@@ -39,7 +39,7 @@ export function Navigation() {
             <Link href="/" className="flex items-center gap-3 group" aria-label="Apolo Medical HT S.A.C.">
               <div className="relative h-14 w-14 flex-shrink-0">
                 <Image
-                  src="/logos/apolo-logo.jpeg"
+                  src="/logos/apolo-logo.png"
                   alt="Logotipo de Apolo Medical"
                   fill
                   priority

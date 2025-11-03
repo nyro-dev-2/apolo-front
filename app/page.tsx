@@ -32,7 +32,7 @@ export default function HomePage() {
     {
       icon: Truck,
       title: "Distribución Nacional",
-      description: "Red logística eficiente en todo el Perú",
+      description: "Red logística en todo el Perú",
     },
     {
       icon: Users,
@@ -104,23 +104,75 @@ export default function HomePage() {
 
       <section id="ventajas" className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <div className="grid gap-6 sm:grid-cols-3 max-w-5xl mx-auto">
+          {/* Grid asimétrica: la columna del medio es 1.5 veces más ancha */}
+          <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr_1fr] max-w-6xl mx-auto">
             {highlights.map((highlight, index) => {
               const Icon = highlight.icon
-              return (
+
+              // Bloque del medio (Distribución Nacional)
+              if (index === 1) {
+                return (
+                  <Card
+                    key={index}
+                    className="border border-border/70 bg-white/90 shadow-sm transition-smooth hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10"
+                  >
+                    <CardContent className="flex h-full items-center gap-6 p-7">
+                      {/* Panel izquierdo: Texto */}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary">
+                            <Icon className="h-6 w-6" aria-hidden="true" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-foreground">{highlight.title}</h3>
+                            <p className="mt-1 text-sm text-foreground/70 leading-relaxed">{highlight.description}</p>
+                          </div>
+                        </div>
+                        <div className="mt-4 text-sm text-foreground/70">
+                          Tenemos una red logística que asegura entregas rápidas y seguras a hospitales y clínicas del país.
+                        </div>
+                      </div>
+
+                      {/* Panel derecho: Imagen */}
+                      <div className="relative w-32 flex-shrink-0">
+                        <Image
+                          src="/favicons/mapa_v2.png"
+                          alt="Mapa de distribución"
+                          width={128}
+                          height={160}
+                          className="object-contain"
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              }
+
+              // Bloques normales (Productos y Respaldo)
+              const cardContent = (
+                <CardContent className="flex h-full flex-col gap-4 p-7 text-left">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/12 text-primary">
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground">{highlight.title}</h3>
+                    <p className="mt-2 text-sm text-foreground/70 leading-relaxed">{highlight.description}</p>
+                  </div>
+                </CardContent>
+              )
+
+              return index === 0 ? (
+                <Link key={index} href="/productos" className="block">
+                  <Card className="h-full cursor-pointer border border-border/70 bg-white/90 shadow-sm transition-smooth hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10">
+                    {cardContent}
+                  </Card>
+                </Link>
+              ) : (
                 <Card
                   key={index}
-                  className="border border-border/70 bg-white/90 shadow-sm transition-smooth hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10"
+                  className="h-full border border-border/70 bg-white/90 shadow-sm transition-smooth hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10"
                 >
-                  <CardContent className="flex h-full flex-col gap-4 p-7 text-left">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/12 text-primary">
-                      <Icon className="h-6 w-6" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground">{highlight.title}</h3>
-                      <p className="mt-2 text-sm text-foreground/70 leading-relaxed">{highlight.description}</p>
-                    </div>
-                  </CardContent>
+                  {cardContent}
                 </Card>
               )
             })}

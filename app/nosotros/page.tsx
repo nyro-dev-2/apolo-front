@@ -32,17 +32,18 @@ export default function AboutPage() {
     "Relaciones a largo plazo",
   ]
 
-  const partners = ["AESCULAP", "ENDAC", "PRODORTH", "BONEGRAFT", "SCIENCEMEDIC CO. LTD."]
+  const partners = ["ENDAC", "PRODORTH", "SCIENCEMEDIC", "HC BIOLOGICS", "BONETECH"]
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-primary/90 py-20 text-primary-foreground">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="mb-6 text-4xl font-bold md:text-5xl text-balance">Nosotros</h1>
-            <p className="text-lg text-primary-foreground/90 leading-relaxed text-pretty">
-              Conoce nuestra historia, valores y compromiso con la excelencia médica
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-secondary py-24 text-primary-foreground">
+        <div className="absolute inset-0 bg-[url('/medical-pattern.svg')] opacity-10" aria-hidden="true" />
+        <div className="container relative mx-auto px-4">
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="mb-6 text-balance font-serif text-5xl font-semibold md:text-6xl">Nosotros</h1>
+            <p className="mx-auto text-pretty text-lg leading-relaxed text-primary-foreground/90 md:text-xl">
+              Conoce nuestra historia, valores y compromiso con la excelencia médica en soluciones para columna y neurocirugía.
             </p>
           </div>
         </div>

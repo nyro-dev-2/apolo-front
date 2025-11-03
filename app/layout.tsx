@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     "Importación y distribución de dispositivos médico-quirúrgicos, implantes de columna y productos de neurocirugía en Perú",
   generator: "v0.app",
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-    shortcut: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    icon: [{ url: "/favicons/favicon.svg", type: "image/svg+xml" }],
+    shortcut: [{ url: "/favicons/favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/favicons/favicon.svg", type: "image/svg+xml" }],
   },
 }
 
