@@ -17,20 +17,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { getCategoryLabel, type Product, type ProductCategory } from "@/lib/products"
 import { cn } from "@/lib/utils"
 
 export type CategorySummary = {
-  id: ProductCategory | "all"
+  id: string | "all"
   label: string
   description?: string
   count: number
+}
+
+export interface Product {
+  id: string
+  name: string
+  manufacturer: string
+  category: string
+  shortDescription: string
+  fullDescription: string
+  features: string[]
+  specifications: { label: string; value: string }[]
+  images: string[]
+  keywords?: string[]
 }
 
 interface ProductExplorerProps {
   categories: CategorySummary[]
   manufacturers: string[]
   products: Product[]
+}
+
+function getDynamicCategoryLabel(id: string, categories: CategorySummary[]) {
+  return categories.find((c) => c.id === id)?.label ?? id
 }
 
 export function ProductExplorer({ categories, manufacturers, products }: ProductExplorerProps) {
@@ -44,17 +60,10 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
     const normalizedQuery = query.trim().toLowerCase()
 
     return products.filter((product) => {
-      if (selectedCategory !== "all" && product.category !== selectedCategory) {
-        return false
-      }
+      if (selectedCategory !== "all" && product.category !== selectedCategory) return false
+      if (selectedManufacturer !== "all" && product.manufacturer.toLowerCase() !== selectedManufacturer) return false
 
-      if (selectedManufacturer !== "all" && product.manufacturer.toLowerCase() !== selectedManufacturer) {
-        return false
-      }
-
-      if (!normalizedQuery) {
-        return true
-      }
+      if (!normalizedQuery) return true
 
       const tokens = [
         product.name,
@@ -83,13 +92,10 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
 
   return (
     <div className="bg-background">
-      <section className="sticky top-16 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <section className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:sticky lg:top-[6.5rem] lg:z-40">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-              <label htmlFor="search" className="sr-only">
-                Buscar productos
-              </label>
               <div className="relative w-full lg:max-w-xl">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
                 <Input
@@ -124,7 +130,9 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
                 variant="ghost"
                 className="w-full gap-2 lg:w-auto"
                 onClick={resetFilters}
-                disabled={selectedCategory === "all" && selectedManufacturer === "all" && query.length === 0}
+                disabled={
+                  selectedCategory === "all" && selectedManufacturer === "all" && query.length === 0
+                }
               >
                 <RefreshCcw className="h-4 w-4" aria-hidden="true" />
                 Limpiar filtros
@@ -144,7 +152,6 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
                     size="lg"
                     role="tab"
                     aria-selected={isActive}
-                    aria-controls="catalogo-productos"
                     onClick={() => setSelectedCategory(category.id)}
                     disabled={disabled}
                     className={cn(
@@ -156,14 +163,10 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
                     {category.label}
                     <Badge
                       variant="secondary"
-                      className={cn(
-                        "ml-2",
-                        isActive && "bg-white/20 text-white",
-                      )}
+                      className={cn("ml-2", isActive && "bg-white/20 text-white")}
                     >
                       {category.count}
                     </Badge>
-                    {disabled && <span className="sr-only">(Sin productos disponibles por ahora)</span>}
                   </Button>
                 )
               })}
@@ -178,10 +181,15 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
                 <span>
                   {totalResults} resultado{totalResults === 1 ? "" : "s"} para
                 </span>
-                <span className="font-medium text-foreground">{activeCategory?.label ?? "Todos"}</span>
+                <span className="font-medium text-foreground">
+                  {activeCategory?.label ?? "Todos"}
+                </span>
                 {selectedManufacturer !== "all" && (
                   <span>
-                    · Fabricante: {manufacturers.find((item) => item.toLowerCase() === selectedManufacturer) ?? selectedManufacturer}
+                    · Fabricante:{" "}
+                    {manufacturers.find(
+                      (item) => item.toLowerCase() === selectedManufacturer
+                    ) ?? selectedManufacturer}
                   </span>
                 )}
               </span>
@@ -226,7 +234,7 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
                           fill
                           priority={index < 2 && selectedCategory === "all" && query.length === 0}
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                          src={product.images[0] || "/placeholder.svg"}
+                          src={product.images?.[0] || "/placeholder.svg"}
                           alt={`Imagen destacada de ${product.name}`}
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
@@ -239,7 +247,7 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
                         <div className="flex flex-col gap-2">
                           <div className="flex flex-wrap items-center gap-2">
                             <Badge variant="outline" className="border-primary/30 text-primary">
-                              {getCategoryLabel(product.category)}
+                              {getDynamicCategoryLabel(product.category, categories)}
                             </Badge>
                             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                               {product.manufacturer}
@@ -249,7 +257,9 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
                             {product.name}
                           </h3>
                         </div>
-                        <p className="line-clamp-3 text-sm text-muted-foreground">{product.shortDescription}</p>
+                        <p className="line-clamp-3 text-sm text-muted-foreground">
+                          {product.shortDescription}
+                        </p>
                       </CardContent>
                       <CardFooter className="p-6 pt-0">
                         <Button asChild className="w-full">
