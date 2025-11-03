@@ -32,7 +32,7 @@ export default function AboutPage() {
     "Relaciones a largo plazo",
   ]
 
-  const partners = ["AESCULAP", "ENDAC", "PRODORTH", "BONEGRAFT", "SCIENCEMEDIC CO. LTD."]
+  const partners = ["ENDAC", "PRODORTH", "SCIENCEMEDIC", "HC BIOLOGICS", "BONETECH"]
 
   return (
     <div className="flex flex-col">
