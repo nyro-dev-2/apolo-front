@@ -92,7 +92,7 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
 
   return (
     <div className="bg-background">
-      <section className="sticky top-16 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <section className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:sticky lg:top-[6.5rem] lg:z-40">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
