@@ -64,8 +64,13 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Apolo Medical HT S.A.C. Todos los derechos reservados.</p>
+        <div className="mt-8 border-t border-border pt-8 text-center">
+          <p className="text-sm text-muted-foreground mb-2">
+            &copy; {new Date().getFullYear()} Apolo Medical HT S.A.C. Todos los derechos reservados.
+          </p>
+          <p className="text-xs text-muted-foreground/70">
+            Made with 🤖 by <span className="font-medium">Nyro</span>
+          </p>
         </div>
       </div>
     </footer>

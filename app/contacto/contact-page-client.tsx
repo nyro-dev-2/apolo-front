@@ -656,12 +656,7 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                       </a>
                     </Button>
                     <Button variant="outline" size="icon" asChild>
-                      <a href="https://www.linkedin.com/company/apolo-medical" target="_blank" rel="noopener noreferrer">
-                        <Linkedin className="h-5 w-5" />
-                      </a>
-                    </Button>
-                    <Button variant="outline" size="icon" asChild>
-                      <a href="https://www.instagram.com/apolo.medical" target="_blank" rel="noopener noreferrer">
+                      <a href="https://www.instagram.com/apolomedicalht/" target="_blank" rel="noopener noreferrer">
                         <Instagram className="h-5 w-5" />
                       </a>
                     </Button>
