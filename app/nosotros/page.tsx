@@ -3,6 +3,8 @@ import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Target, Eye, Award, Users, CheckCircle2 } from "lucide-react"
 
+import { PartnerCarousel } from "@/components/partner-carousel"
+
 export default function AboutPage() {
   const values = [
     {
@@ -171,25 +173,8 @@ export default function AboutPage() {
       </section>
 
       {/* International Partners */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-4xl text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground text-balance">Socios Internacionales</h2>
-            <p className="mb-12 text-lg text-muted-foreground">
-              Colaboramos con las marcas más prestigiosas del sector médico mundial
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-              {partners.map((partner) => (
-                <div
-                  key={partner}
-                  className="flex h-20 w-40 items-center justify-center rounded-lg bg-muted/50 px-4 text-sm font-semibold text-muted-foreground hover:bg-muted transition-colors"
-                >
-                  {partner}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      <section id="socios" className="py-20 bg-muted/30">
+        <PartnerCarousel />
       </section>
     </div>
   )

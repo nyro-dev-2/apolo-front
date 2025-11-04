@@ -252,7 +252,7 @@ export default function HomePage() {
       </section>
 
       {/* Partners Section */}
-      <section id="socios">
+      <section id="socios" className="py-20 bg-muted/30 py-24 bg-secondary/30">
         <PartnerCarousel />
       </section>
 

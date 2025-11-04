@@ -2,7 +2,11 @@
 
 import Image from "next/image"
 
-export function PartnerCarousel() {
+interface PartnerCarouselProps {
+  backgroundColor?: string
+}
+
+export function PartnerCarousel({ backgroundColor = "bg-secondary/30" }: PartnerCarouselProps) {
   const partners = [
     { name: "ENDAC", logo: "/logos/endac-logo.png" },
     { name: "PRODORTH", logo: "/logos/prodorth-logo.png" },
@@ -15,7 +19,7 @@ export function PartnerCarousel() {
                              ...partners, ...partners, ...partners, ...partners]
 
   return (
-    <div className="relative overflow-hidden bg-secondary/30 py-12">
+    <div className="relative overflow-hidden">
       <div className="container mx-auto px-4 mb-8">
         <h2 className="text-3xl font-serif font-bold text-center text-foreground mb-3">Socios Internacionales</h2>
         <p className="text-center text-muted-foreground text-lg max-w-2xl mx-auto">
