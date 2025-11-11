@@ -28,7 +28,7 @@ export function Navigation() {
       {/* Header superior con teléfono y correo eliminado */}
 
       <nav
-        className={`sticky top-0 z-50 w-full border-b transition-smooth font-header ${
+        className={`z-50 w-full border-b transition-smooth font-header lg:sticky lg:top-0 ${
           scrolled
             ? "bg-background/95 backdrop-blur-xl shadow-lg shadow-primary/5 border-border/80"
             : "bg-background/80 backdrop-blur-md border-border/40"
