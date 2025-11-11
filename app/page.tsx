@@ -7,9 +7,9 @@ import { PartnerCarousel } from "@/components/partner-carousel"
 
 export default function HomePage() {
   const heroValues = [
-    "Soporte técnico en sala",
+    "Soporte técnico en quirófano",
     "Distribución nacional inmediata",
-    "Capacitación para equipos quirúrgicos",
+    "Capacitación para equipos de quirófano",
   ]
 
   const specializations = [
@@ -37,7 +37,7 @@ export default function HomePage() {
     {
       icon: Users,
       title: "Respaldo Médico",
-      description: "Fundada y asesorada por especialistas",
+      description: "Equipos de especialistas especializados",
     },
   ]
 
@@ -58,14 +58,14 @@ export default function HomePage() {
         <div className="container relative mx-auto px-4 py-24 md:py-32">
           <div className="max-w-3xl text-center lg:text-left">
             <div className="inline-flex items-center gap-3 rounded-full border border-primary/20 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-primary shadow-sm backdrop-blur">
-              Apolo Medical HT S.A.C.
+              Apolo Medical SAC
             </div>
             <h1 className="mt-6 text-balance text-foreground">
               Tecnología y soporte para cirugías complejas de <span className="text-primary">columna y neuro</span>
             </h1>
             <p className="mt-6 max-w-2xl text-pretty text-foreground/85">
-              Portafolio completo de implantes espinales e instrumentos neuroquirúrgicos, con soporte técnico en sala,
-              capacitación y distribución nacional para asegurar procedimientos previsibles y seguros.
+              Portafolio completo de implantes espinales e instrumentos neuroquirúrgicos, con soporte técnico en quirófano,
+              capacitación y distribución nacional para asegurar procedimientos precisos y seguros.
             </p>
             <ul className="mt-10 grid gap-3 sm:grid-cols-3 sm:text-left">
               {heroValues.map((value) => (
@@ -129,7 +129,7 @@ export default function HomePage() {
                           </div>
                         </div>
                         <div className="mt-4 text-sm text-foreground/70">
-                          Tenemos una red logística que asegura entregas rápidas y seguras a hospitales y clínicas del país.
+                          Tenemos una red logística que asegura entregas rápidas y seguras a hospitales y centros de salud del país.
                         </div>
                       </div>
 
@@ -191,8 +191,8 @@ export default function HomePage() {
                   Tecnología Médica de <span className="text-primary text-[1.15em]">Vanguardia</span>
                 </h2>
                 <p className="text-base md:text-lg text-foreground/80 leading-relaxed mb-10">
-                  En Apolo Medical HT nos enfocamos en la innovación médica, la investigación continua y la calidad
-                  clínica. Cada producto es fruto del conocimiento científico y la experiencia quirúrgica.
+                  En Apolo Medical HT nos enfocamos en la innovación médica, la investigación continua y la calidad.
+                  Cada producto es fruto del conocimiento científico y la experiencia quirúrgica.
                 </p>
                 <div className="space-y-6">
                   <div className="flex items-start gap-4 glass-effect p-5 rounded-lg transition-smooth hover:bg-white/10">
@@ -202,7 +202,7 @@ export default function HomePage() {
                     <div>
                       <h4 className="font-bold text-foreground mb-2 text-lg">Respaldo Científico</h4>
                       <p className="text-sm text-foreground/70 leading-relaxed">
-                        Fundada y asesorada por médicos especialistas con amplia experiencia clínica
+                        Fundada y asesorada por médicos especialistas con amplia experiencia
                       </p>
                     </div>
                   </div>

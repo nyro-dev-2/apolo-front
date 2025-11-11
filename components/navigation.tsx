@@ -36,7 +36,7 @@ export function Navigation() {
       >
         <div className="container mx-auto px-4">
           <div className="flex h-24 items-center justify-between">
-            <Link href="/" className="flex items-center gap-3 group" aria-label="Apolo Medical HT S.A.C.">
+            <Link href="/" className="flex items-center gap-3 group" aria-label="Apolo Medical SAC">
               <div className="relative h-14 w-14 flex-shrink-0">
                 <Image
                   src="/logos/apolo-logo.png"
@@ -49,10 +49,7 @@ export function Navigation() {
               </div>
               <div className="flex flex-col">
                 <span className="text-2xl font-heading font-bold text-primary tracking-tight group-hover:text-primary/80 transition-smooth">
-                  Apolo Medical
-                </span>
-                <span className="text-xs font-semibold text-muted-foreground tracking-[0.25em] uppercase">
-                  HT S.A.C.
+                  Apolo Medical SAC
                 </span>
               </div>
             </Link>

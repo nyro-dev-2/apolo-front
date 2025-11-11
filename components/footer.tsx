@@ -3,9 +3,9 @@ import { Mail, Phone, MapPin } from "lucide-react"
 import { COMPANY_ADDRESS } from "@/lib/company-info"
 
 export function Footer() {
-  const partners = ["ENDAC", "PRODORTH", "SCIENCEMEDIC", "HC BIOLOGICS", "BONETECH"]
+  const partners = ["ENDAC", "PRODORTH", "HC BIOLOGICS", "BONETECH"]
 
-  const logistics = ["Cruz del Sur", "Flores Cargo", "DHL", "FedEx"]
+  const logistics = ["Vía aérea", "Vía terrestre"]
 
   return (
     <footer className="border-t border-border bg-muted/30">
@@ -25,8 +25,8 @@ export function Footer() {
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <a href="mailto:apolo.medicalht@gmail.com" className="hover:text-primary transition-colors">
-                  apolo.medicalht@gmail.com
+                <a href="mailto:ventas@apolomedical.com.pe" className="hover:text-primary transition-colors">
+                  ventas@apolomedical.com.pe
                 </a>
               </div>
               <div className="flex items-start gap-2">
