@@ -151,7 +151,10 @@ export function ContactPageClient({ products, categories }: ContactPageClientPro
   const groupedProducts = useMemo(() => {
     const groups: Record<string, ContactProductOption[]> = {}
     products.forEach((product) => {
-      const key = product.category?.toLowerCase().trim() || "otros"
+      const key =
+        typeof product.category === "string"
+          ? product.category.toLowerCase().trim()
+          : "otros"
       if (!groups[key]) {
         groups[key] = []
       }
@@ -161,8 +164,13 @@ export function ContactPageClient({ products, categories }: ContactPageClientPro
       list.sort((a, b) => a.name.localeCompare(b.name, "es"))
     })
     const orderedKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b, "es"))
-    return orderedKeys.map((key) => ({ key, label: formatCategoryLabel(key, categories), items: groups[key] }))
+    return orderedKeys.map((key) => ({
+      key,
+      label: formatCategoryLabel(key, categories),
+      items: groups[key],
+    }))
   }, [products, categories])
+
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
