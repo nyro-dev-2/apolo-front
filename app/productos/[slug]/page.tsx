@@ -89,7 +89,7 @@ export default async function ProductDetailPage({
       _id,
       name,
       manufacturer,
-      category,
+      "category": category->title,
       shortDescription,
       fullDescription,
       features,
@@ -105,7 +105,7 @@ export default async function ProductDetailPage({
       _id,
       name,
       shortDescription,
-      category,
+      "category": category->title,
       "slug": slug.current,
       "images": images[]{ "url": asset->url }
     }`,
