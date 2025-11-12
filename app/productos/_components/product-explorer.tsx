@@ -95,6 +95,12 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
       <section className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:sticky lg:top-[6.5rem] lg:z-40">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-2xl font-semibold text-foreground">Explorar catálogo</h2>
+              <p className="text-sm text-foreground/80">
+                Ajusta los filtros por categoría, fabricante o palabra clave para encontrar el dispositivo indicado.
+              </p>
+            </div>
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
               <div className="relative w-full lg:max-w-xl">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
@@ -257,7 +263,7 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
                             {product.name}
                           </h3>
                         </div>
-                        <p className="line-clamp-3 text-sm text-muted-foreground">
+                        <p className="line-clamp-3 text-sm text-foreground/85">
                           {product.shortDescription}
                         </p>
                       </CardContent>

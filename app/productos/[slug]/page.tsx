@@ -5,10 +5,10 @@ import type { Metadata } from "next"
 import { ArrowLeft, CheckCircle2, Factory } from "lucide-react"
 
 import { sanityClient } from "@/lib/sanity"
-import { ProductImageCarousel } from "@/components/product-image-carousel"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { ProductImageCarouselLazy } from "@/components/product-image-carousel.lazy"
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://apolomedical.com.pe"
 
@@ -175,7 +175,7 @@ export default async function ProductDetailPage({
 
             <div className="mb-16 grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)] lg:items-start">
               <div className="order-2 rounded-3xl border border-border/40 bg-muted/20 p-4 shadow-sm lg:order-1">
-                <ProductImageCarousel
+                <ProductImageCarouselLazy
                   images={product.images?.map((img: any) => img.url) || []}
                   productName={normalizeText(product.name)}
                   className="h-[360px] md:h-[420px]"

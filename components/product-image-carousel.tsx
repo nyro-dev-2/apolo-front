@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-interface ProductImageCarouselProps {
+export type ProductImageCarouselProps = {
   images: string[]
   productName: string
   className?: string
@@ -14,6 +14,7 @@ interface ProductImageCarouselProps {
 
 export function ProductImageCarousel({ images, productName, className }: ProductImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [shouldReduceMotion, setShouldReduceMotion] = useState(false)
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % images.length)
@@ -36,11 +37,28 @@ export function ProductImageCarousel({ images, productName, className }: Product
   }
 
   useEffect(() => {
-    if (images.length <= 1) return
+    const matcher = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const handleChange = () => setShouldReduceMotion(matcher.matches)
+    handleChange()
+    if (typeof matcher.addEventListener === "function") {
+      matcher.addEventListener("change", handleChange)
+      return () => matcher.removeEventListener("change", handleChange)
+    }
+
+    matcher.addListener(handleChange)
+    return () => matcher.removeListener(handleChange)
+  }, [])
+
+  useEffect(() => {
+    setCurrentIndex(0)
+  }, [images])
+
+  useEffect(() => {
+    if (images.length <= 1 || shouldReduceMotion) return
 
     const interval = setInterval(goToNext, 5000)
     return () => clearInterval(interval)
-  }, [goToNext, images.length])
+  }, [goToNext, images.length, shouldReduceMotion])
 
   if (images.length === 0) {
     return (
@@ -109,7 +127,8 @@ export function ProductImageCarousel({ images, productName, className }: Product
                 className={`h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex ? "w-8 bg-white" : "w-2 bg-white/50"
                 }`}
-                aria-label={`Go to image ${index + 1}`}
+                type="button"
+                aria-label={`Ir a la imagen ${index + 1}`}
                 aria-current={index === currentIndex}
               />
             ))}

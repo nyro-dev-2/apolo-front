@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle2, Award, Truck, Users, ArrowRight } from "lucide-react"
-import { PartnerCarousel } from "@/components/partner-carousel"
+import { PartnerCarouselLazy } from "@/components/partner-carousel.lazy"
 
 export default function HomePage() {
   const heroValues = [
@@ -46,10 +46,11 @@ export default function HomePage() {
       <section id="hero" className="relative overflow-hidden">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="/neurosurgery-medical-equipment-operating-room.jpg"
+            src="/neurosurgery-medical-equipment-operating-room.webp"
             alt="Equipo quirúrgico especializado realizando una cirugía en sala"
             fill
             priority
+            fetchPriority="high"
             className="object-cover"
             sizes="100vw"
           />
@@ -63,7 +64,7 @@ export default function HomePage() {
             <h1 className="mt-6 text-balance text-foreground">
               Tecnología y soporte para cirugías complejas de <span className="text-primary">columna y neuro</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-pretty text-foreground/85">
+            <p className="mt-6 max-w-2xl text-pretty text-foreground">
               Portafolio completo de implantes espinales e instrumentos neuroquirúrgicos, con soporte técnico en quirófano,
               capacitación y distribución nacional para asegurar procedimientos precisos y seguros.
             </p>
@@ -71,7 +72,7 @@ export default function HomePage() {
               {heroValues.map((value) => (
                 <li
                   key={value}
-                  className="flex items-center justify-center gap-3 rounded-xl border border-border/70 bg-white/85 px-4 py-3 text-sm text-foreground/80 shadow-sm backdrop-blur-sm sm:justify-start"
+                  className="flex items-center justify-center gap-3 rounded-xl border border-border/70 bg-white/90 px-4 py-3 text-sm text-foreground shadow-sm backdrop-blur-sm sm:justify-start"
                 >
                   <CheckCircle2 className="h-5 w-5 text-primary" aria-hidden="true" />
                   <span>{value}</span>
@@ -104,8 +105,14 @@ export default function HomePage() {
 
       <section id="ventajas" className="py-20 bg-background">
         <div className="container mx-auto px-4">
+          <h2 className="text-center text-3xl font-bold text-foreground md:text-4xl">
+            Ventajas competitivas
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-muted-foreground">
+            Cobertura integral desde la selección del equipamiento hasta el soporte en sala.
+          </p>
           {/* Grid asimétrica: la columna del medio es 1.5 veces más ancha */}
-          <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr_1fr] max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr_1fr] max-w-6xl mx-auto mt-10">
             {highlights.map((highlight, index) => {
               const Icon = highlight.icon
 
@@ -119,16 +126,16 @@ export default function HomePage() {
                     <CardContent className="flex h-full items-center gap-6 p-7">
                       {/* Panel izquierdo: Texto */}
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
+                        <div className="mb-3 flex items-center gap-3">
                           <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary">
                             <Icon className="h-6 w-6" aria-hidden="true" />
                           </div>
                           <div>
                             <h3 className="text-lg font-semibold text-foreground">{highlight.title}</h3>
-                            <p className="mt-1 text-sm text-foreground/70 leading-relaxed">{highlight.description}</p>
+                            <p className="mt-1 text-sm leading-relaxed text-foreground/90">{highlight.description}</p>
                           </div>
                         </div>
-                        <div className="mt-4 text-sm text-foreground/70">
+                        <div className="mt-4 text-sm text-foreground">
                           Tenemos una red logística que asegura entregas rápidas y seguras a hospitales y centros de salud del país.
                         </div>
                       </div>
@@ -156,7 +163,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">{highlight.title}</h3>
-                    <p className="mt-2 text-sm text-foreground/70 leading-relaxed">{highlight.description}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/90">{highlight.description}</p>
                   </div>
                 </CardContent>
               )
@@ -181,7 +188,7 @@ export default function HomePage() {
       </section>
 
       <section id="tecnologia" className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/advanced-neurosurgery-equipment.jpg')] bg-cover bg-center" />
+  <div className="absolute inset-0 bg-[url('/advanced-neurosurgery-equipment.webp')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/85 to-white/80" />
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-6xl">
@@ -190,7 +197,7 @@ export default function HomePage() {
                 <h2 className="mb-6 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl text-balance">
                   Tecnología Médica de <span className="text-primary text-[1.15em]">Vanguardia</span>
                 </h2>
-                <p className="text-base md:text-lg text-foreground/80 leading-relaxed mb-10">
+                <p className="mb-10 text-base leading-relaxed text-foreground md:text-lg">
                   En Apolo Medical HT nos enfocamos en la innovación médica, la investigación continua y la calidad.
                   Cada producto es fruto del conocimiento científico y la experiencia quirúrgica.
                 </p>
@@ -200,8 +207,8 @@ export default function HomePage() {
                       <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-foreground mb-2 text-lg">Respaldo Científico</h4>
-                      <p className="text-sm text-foreground/70 leading-relaxed">
+                      <h3 className="mb-2 text-lg font-semibold text-foreground">Respaldo Científico</h3>
+                      <p className="text-sm leading-relaxed text-foreground/90">
                         Fundada y asesorada por médicos especialistas con amplia experiencia
                       </p>
                     </div>
@@ -211,8 +218,8 @@ export default function HomePage() {
                       <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-foreground mb-2 text-lg">Tecnología Avanzada</h4>
-                      <p className="text-sm text-foreground/70 leading-relaxed">
+                      <h3 className="mb-2 text-lg font-semibold text-foreground">Tecnología Avanzada</h3>
+                      <p className="text-sm leading-relaxed text-foreground/90">
                         Equipos de última generación para procedimientos neuroquirúrgicos complejos
                       </p>
                     </div>
@@ -222,8 +229,8 @@ export default function HomePage() {
                       <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-foreground mb-2 text-lg">Soporte Integral</h4>
-                      <p className="text-sm text-foreground/70 leading-relaxed">
+                      <h3 className="mb-2 text-lg font-semibold text-foreground">Soporte Integral</h3>
+                      <p className="text-sm leading-relaxed text-foreground/90">
                         Capacitación técnica y asesoría especializada para profesionales de la salud
                       </p>
                     </div>
@@ -235,7 +242,7 @@ export default function HomePage() {
                   <video 
                     className="w-full h-full object-cover"
                     controls
-                    poster="/video-thumbnail.jpg"
+                    poster="/video-thumbnail.webp"
                     preload="metadata"
                   >
                     <source src="/videos/presentation.mp4" type="video/mp4" />
@@ -253,7 +260,7 @@ export default function HomePage() {
 
       {/* Partners Section */}
       <section id="socios" className="py-20 bg-muted/30 py-24 bg-secondary/30">
-        <PartnerCarousel />
+  <PartnerCarouselLazy />
       </section>
 
       <section id="especialidades" className="py-24 bg-secondary/30">
@@ -270,7 +277,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <Image
                   fill
-                  src="/category-cranial-systems.jpg"
+                  src="/category-cranial-systems.webp"
                   alt="Equipo neuroquirúrgico para sistemas craneales"
                   className="object-cover transition-smooth duration-500 group-hover:scale-110"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -298,7 +305,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <Image
                   fill
-                  src="/category-spinal-implants.jpg"
+                  src="/category-spinal-implants.webp"
                   alt="Implantes espinales de titanio"
                   className="object-cover transition-smooth duration-500 group-hover:scale-110"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -326,7 +333,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <Image
                   fill
-                  src="/category-neuroendoscopy.png"
+                  src="/category-neuroendoscopy.webp"
                   alt="Instrumental para neuroendoscopía"
                   className="object-cover transition-smooth duration-500 group-hover:scale-110"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -354,7 +361,7 @@ export default function HomePage() {
       </section>
 
       <section id="cta-final" className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/neurosurgery-medical-equipment-operating-room.jpg')] bg-cover bg-center" />
+  <div className="absolute inset-0 bg-[url('/neurosurgery-medical-equipment-operating-room.webp')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/80 to-white/80" />
         <div className="container relative mx-auto px-4 text-center">
           <h2 className="mb-6 text-3xl font-bold md:text-5xl text-balance max-w-3xl mx-auto text-foreground">
