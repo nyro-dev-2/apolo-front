@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { RefreshCcw, Search } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -80,7 +79,6 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
     })
   }, [products, query, selectedCategory, selectedManufacturer])
 
-  const prefersReducedMotion = useReducedMotion()
   const totalResults = filteredProducts.length
   const nothingFound = totalResults === 0
 
@@ -221,61 +219,51 @@ export function ProductExplorer({ categories, manufacturers, products }: Product
             </div>
           ) : (
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              <AnimatePresence mode="popLayout">
-                {filteredProducts.map((product, index) => (
-                  <motion.article
-                    key={product.id}
-                    layout
-                    initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -16 }}
-                    transition={{
-                      duration: prefersReducedMotion ? 0 : 0.3,
-                      delay: prefersReducedMotion ? 0 : index * 0.05,
-                    }}
-                  >
-                    <Card className="group flex h-full flex-col border-border/50 transition hover:border-primary/50 hover:shadow-xl">
-                      <div className="relative h-56 w-full overflow-hidden rounded-t-xl bg-muted">
-                        <Image
-                          fill
-                          priority={index < 2 && selectedCategory === "all" && query.length === 0}
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                          src={product.images?.[0] || "/placeholder.svg"}
-                          alt={`Imagen destacada de ${product.name}`}
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div
-                          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                          aria-hidden="true"
-                        />
+              {filteredProducts.map((product, index) => (
+                <article
+                  key={product.id}
+                  className="group flex h-full flex-col border border-border/50 bg-background transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl"
+                  style={{ transitionDelay: `${Math.min(index, 5) * 40}ms` }}
+                >
+                  <div className="relative h-56 w-full overflow-hidden rounded-t-xl bg-muted">
+                    <Image
+                      fill
+                      priority={index < 2 && selectedCategory === "all" && query.length === 0}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      src={product.images?.[0] || "/placeholder.svg"}
+                      alt={`Imagen destacada de ${product.name}`}
+                      className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <CardContent className="flex flex-1 flex-col gap-4 p-6">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="outline" className="border-primary/30 text-primary">
+                          {getDynamicCategoryLabel(product.category, categories)}
+                        </Badge>
+                        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          {product.manufacturer}
+                        </span>
                       </div>
-                      <CardContent className="flex flex-1 flex-col gap-4 p-6">
-                        <div className="flex flex-col gap-2">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="outline" className="border-primary/30 text-primary">
-                              {getDynamicCategoryLabel(product.category, categories)}
-                            </Badge>
-                            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                              {product.manufacturer}
-                            </span>
-                          </div>
-                          <h3 className="line-clamp-2 text-xl font-semibold text-foreground transition-colors group-hover:text-primary">
-                            {product.name}
-                          </h3>
-                        </div>
-                        <p className="line-clamp-3 text-sm text-foreground/85">
-                          {product.shortDescription}
-                        </p>
-                      </CardContent>
-                      <CardFooter className="p-6 pt-0">
-                        <Button asChild className="w-full">
-                          <Link href={`/productos/${product.id}`}>Ver detalles</Link>
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  </motion.article>
-                ))}
-              </AnimatePresence>
+                      <h3 className="line-clamp-2 text-xl font-semibold text-foreground transition-colors group-hover:text-primary">
+                        {product.name}
+                      </h3>
+                    </div>
+                    <p className="line-clamp-3 text-sm text-foreground/85">
+                      {product.shortDescription}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="p-6 pt-0">
+                    <Button asChild className="w-full">
+                      <Link href={`/productos/${product.id}`}>Ver detalles</Link>
+                    </Button>
+                  </CardFooter>
+                </article>
+              ))}
             </div>
           )}
         </div>

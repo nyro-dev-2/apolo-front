@@ -10,23 +10,44 @@ import { useEffect, useState } from "react"
 export function WhatsAppButton() {
   const [isHovered, setIsHovered] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [isActivated, setIsActivated] = useState(false)
 
   useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    if (typeof window === "undefined") {
+      return
+    }
+
+    const enable = () => setIsActivated(true)
+    const events = ["pointerdown", "keydown", "touchstart"] as const
+
+    events.forEach((event) => window.addEventListener(event, enable, { once: true }))
+
+    return () => {
+      events.forEach((event) => window.removeEventListener(event, enable))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isActivated || typeof window === "undefined" || typeof window.matchMedia !== "function") {
       return
     }
 
     const matcher = window.matchMedia("(prefers-reduced-motion: reduce)")
     const updatePreference = () => setReduceMotion(matcher.matches)
     updatePreference()
-      if (typeof matcher.addEventListener === "function") {
-        matcher.addEventListener("change", updatePreference)
-        return () => matcher.removeEventListener("change", updatePreference)
-      }
 
-      matcher.addListener(updatePreference)
-      return () => matcher.removeListener(updatePreference)
-  }, [])
+    if (typeof matcher.addEventListener === "function") {
+      matcher.addEventListener("change", updatePreference)
+      return () => matcher.removeEventListener("change", updatePreference)
+    }
+
+    matcher.addListener(updatePreference)
+    return () => matcher.removeListener(updatePreference)
+  }, [isActivated])
+
+  if (!isActivated) {
+    return null
+  }
   
   // WhatsApp configuration
   const phoneNumber = "51957359298" // Peru country code + number

@@ -89,7 +89,8 @@ export default async function ProductDetailPage({
       _id,
       name,
       manufacturer,
-      category,
+      "category": coalesce(category->slug.current, category),
+      "categoryLabel": coalesce(category->title, category),
       shortDescription,
       fullDescription,
       features,
@@ -101,15 +102,18 @@ export default async function ProductDetailPage({
   if (!product) notFound()
 
   const relatedProducts = await sanityClient.fetch(
-    `*[_type == "product" && category == $category && slug.current != $slug][0...3]{
+    `*[_type == "product" && slug.current != $slug && (
+        category->slug.current == $categorySlug || category == $categorySlug
+      )][0...3]{
       _id,
       name,
       shortDescription,
-      category,
+      "category": coalesce(category->slug.current, category),
+      "categoryLabel": coalesce(category->title, category),
       "slug": slug.current,
       "images": images[]{ "url": asset->url }
     }`,
-    { category: product.category, slug }
+    { categorySlug: product.category, slug }
   )
 
   const normalizeText = (value: any): string => {
@@ -160,7 +164,7 @@ export default async function ProductDetailPage({
           <div className="mx-auto max-w-6xl">
             <div className="mb-12 text-center">
               <Badge variant="secondary" className="mb-4 text-sm capitalize">
-                {normalizeText(product.category)}
+                {normalizeText(product.categoryLabel ?? product.category)}
               </Badge>
               <h1 className="text-balance font-serif text-4xl font-bold text-foreground md:text-5xl">
                 {normalizeText(product.name)}
@@ -246,7 +250,7 @@ export default async function ProductDetailPage({
                   </div>
                   <CardContent className="flex flex-1 flex-col gap-3 p-6">
                     <Badge variant="outline" className="mb-2 border-primary/30 text-primary capitalize">
-                      {normalizeText(p.category)}
+                      {normalizeText(p.categoryLabel ?? p.category)}
                     </Badge>
                     <h3 className="text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
                       {normalizeText(p.name)}

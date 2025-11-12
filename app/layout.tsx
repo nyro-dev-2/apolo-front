@@ -5,10 +5,9 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
-import { ScrollToTop } from "@/components/scroll-to-top"
-import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
+import { ClientOnlyWidgets } from "@/components/client-only-widgets"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,8 +41,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.variable} ${manrope.variable} font-body antialiased`}>
-        <ScrollToTop />
-        <WhatsAppButton />
+        <ClientOnlyWidgets />
         <Suspense fallback={<div>Loading...</div>}>
           <Navigation />
         </Suspense>
