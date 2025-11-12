@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, ArrowRight } from "lucide-react"
 
 export default function NewsPage() {
+  const placeholderImage = "/placeholder.svg"
+
   const news = [
     {
       id: 1,
@@ -14,7 +16,7 @@ export default function NewsPage() {
       date: "15 de Marzo, 2024",
       excerpt:
         "Presentamos el sistema modular de neuroendoscopia compatible con Full HD, que ofrece precisión excepcional en procedimientos mínimamente invasivos.",
-      image: "/news/neuroendoscopy-launch.jpg",
+      image: placeholderImage,
     },
     {
       id: 2,
@@ -23,7 +25,7 @@ export default function NewsPage() {
       date: "8 de Marzo, 2024",
       excerpt:
         "Apolo Medical HT estuvo presente en el congreso más importante de neurocirugía del país, presentando las últimas innovaciones en implantes espinales.",
-      image: "/news/congress-participation.jpg",
+  image: placeholderImage,
     },
     {
       id: 3,
@@ -32,7 +34,7 @@ export default function NewsPage() {
       date: "1 de Marzo, 2024",
       excerpt:
         "Formalizamos nuestra alianza con SCIENCEMEDIC para la distribución exclusiva de sus productos de neurocirugía en Perú.",
-      image: "/news/partnership-announcement.jpg",
+  image: placeholderImage,
     },
     {
       id: 4,
@@ -41,7 +43,7 @@ export default function NewsPage() {
       date: "22 de Febrero, 2024",
       excerpt:
         "Descubre las últimas innovaciones en sistemas de fijación craneal con titanio Ti6Al4V y su impacto en la recuperación del paciente.",
-      image: "/news/cranial-fixation-tech.jpg",
+  image: placeholderImage,
     },
     {
       id: 5,
@@ -50,7 +52,7 @@ export default function NewsPage() {
       date: "15 de Febrero, 2024",
       excerpt:
         "Realizamos un taller especializado sobre el uso de sistemas de drenaje ventricular y válvulas para hidrocefalia.",
-      image: "/news/training-workshop.jpg",
+  image: placeholderImage,
     },
     {
       id: 6,
@@ -59,7 +61,7 @@ export default function NewsPage() {
       date: "5 de Febrero, 2024",
       excerpt:
         "Ampliamos nuestra cobertura a 5 nuevas ciudades del Perú, mejorando los tiempos de entrega y el servicio al cliente.",
-      image: "/news/distribution-expansion.jpg",
+  image: placeholderImage,
     },
   ]
 
@@ -67,19 +69,19 @@ export default function NewsPage() {
     {
       id: 1,
       title: "Demostración del Craneótomo Midas Rex Legend",
-      thumbnail: "/videos/midas-rex-demo-thumb.jpg",
+      thumbnail: placeholderImage,
       duration: "8:45",
     },
     {
       id: 2,
       title: "Técnicas Avanzadas con Aspirador Ultrasónico Misonix",
-      thumbnail: "/videos/misonix-techniques-thumb.jpg",
+      thumbnail: placeholderImage,
       duration: "12:30",
     },
     {
       id: 3,
       title: "Instalación de Válvulas para Hidrocefalia",
-      thumbnail: "/videos/hydrocephalus-valves-thumb.jpg",
+      thumbnail: placeholderImage,
       duration: "6:15",
     },
   ]

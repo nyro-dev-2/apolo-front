@@ -209,4 +209,12 @@
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
+
+  .bg-hero-pattern {
+    background-image:
+      radial-gradient(140% 140% at 0% 0%, rgba(37, 80, 204, 0.14), transparent 58%),
+      radial-gradient(120% 120% at 100% 100%, rgba(25, 135, 220, 0.12), transparent 60%);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 }

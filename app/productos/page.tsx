@@ -155,7 +155,7 @@ export default async function ProductsPage() {
   return (
     <div className="flex flex-col">
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-secondary py-24 text-primary-foreground">
-        <div className="absolute inset-0 bg-[url('/medical-pattern.svg')] opacity-10" aria-hidden="true" />
+  <div className="absolute inset-0 opacity-80 bg-hero-pattern" aria-hidden="true" />
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <Badge variant="secondary" className="mb-4 border-white/30 bg-white/20 text-white">

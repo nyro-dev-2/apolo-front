@@ -40,7 +40,7 @@ export default function AboutPage() {
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-secondary py-24 text-primary-foreground">
-        <div className="absolute inset-0 bg-[url('/medical-pattern.svg')] opacity-10" aria-hidden="true" />
+  <div className="absolute inset-0 opacity-80 bg-hero-pattern" aria-hidden="true" />
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mb-6 text-balance font-serif text-5xl font-semibold md:text-6xl">Nosotros</h1>
