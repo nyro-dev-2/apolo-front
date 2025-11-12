@@ -25,6 +25,13 @@ type Product = {
   slug: string
 }
 
+type CategorySummary = {
+  id: string | "all"
+  label: string
+  description?: string
+  count: number
+}
+
 const PRODUCTS_QUERY = `
 *[_type == "product"]{
   _id,
@@ -36,9 +43,7 @@ const PRODUCTS_QUERY = `
   fullDescription,
   features,
   specifications,
-  "images": images[]{
-    "url": coalesce(asset->url, "")
-  },
+  "images": images[] { "url": coalesce(asset->url, "") },
   "slug": slug.current
 } | order(name asc)
 `
@@ -59,6 +64,7 @@ type CategorySummary = {
   description?: string
   count: number
 }
+`
 
 function buildCategorySummaries(list: Product[]): CategorySummary[] {
   const categoriesMap = new Map<string, CategorySummary>()
@@ -101,7 +107,7 @@ function buildCategorySummaries(list: Product[]): CategorySummary[] {
       id: "all",
       label: "Todos",
       description: "Catálogo completo de soluciones Apolo Medical HT",
-      count: list.length,
+      count: products.length,
     },
     ...summaries,
   ]
@@ -110,9 +116,7 @@ function buildCategorySummaries(list: Product[]): CategorySummary[] {
 export const metadata: Metadata = {
   title: pageTitle,
   description: pageDescription,
-  alternates: {
-    canonical: `${SITE_URL}/productos`,
-  },
+  alternates: { canonical: `${SITE_URL}/productos` },
   openGraph: {
     title: pageTitle,
     description: pageDescription,
@@ -123,10 +127,20 @@ export const metadata: Metadata = {
 }
 
 export default async function ProductsPage() {
-  const products: Product[] = await sanityClient.fetch(PRODUCTS_QUERY, {}, { next: { revalidate: 60 } })
-  const categories = buildCategorySummaries(products)
-  const manufacturers = Array.from(new Set(products.map((p) => p.manufacturer))).sort()
-  const highlightedCategories = categories.filter((c) => c.id !== "all")
+  const [products, categories] = await Promise.all([
+    sanityClient.fetch<Product[]>(PRODUCTS_QUERY, {}, { next: { revalidate: 60 } }),
+    sanityClient.fetch<{ id: string; label: string; description?: string }[]>(
+      CATEGORIES_QUERY,
+      {},
+      { next: { revalidate: 60 } }
+    ),
+  ])
+
+  const categorySummaries = buildCategorySummaries(products, categories)
+  const manufacturers: string[] = Array.from(
+    new Set(products.map((p) => String(p.manufacturer || "")))
+  ).sort()
+  const highlightedCategories = categorySummaries.filter((c) => c.id !== "all")
 
   return (
     <div className="flex flex-col">
@@ -145,7 +159,6 @@ export default async function ProductsPage() {
               con soporte local y documentación completa.
             </p>
           </div>
-
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {highlightedCategories.map((category) => (
               <div
@@ -164,9 +177,8 @@ export default async function ProductsPage() {
           </div>
         </div>
       </section>
-
       <ProductExplorer
-        categories={categories}
+        categories={categorySummaries}
         manufacturers={manufacturers}
         products={products.map((p) => ({
           id: p.slug,
@@ -182,11 +194,10 @@ export default async function ProductsPage() {
           images: Array.isArray(p.images)
             ? p.images
                 .map((i) => i?.url)
-                .filter((url) => typeof url === "string" && url.startsWith("http"))
+                .filter((url): url is string => typeof url === "string" && url.startsWith("http"))
             : [],
         }))}
       />
-
       <section className="bg-gradient-to-br from-muted to-muted/40 py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="mb-4 font-serif text-3xl font-semibold text-foreground md:text-4xl">

@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-
 import {
   Card,
   CardContent,
@@ -41,8 +40,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { Mail, Phone, MapPin, MessageSquare, Linkedin, Instagram, Clock } from "lucide-react"
-
+import { Mail, Phone, MapPin, MessageSquare, Instagram, Clock } from "lucide-react"
 import { COMPANY_ADDRESS } from "@/lib/company-info"
 import { useToast } from "@/hooks/use-toast"
 
@@ -50,14 +48,6 @@ export type ContactProductOption = {
   id: string
   name: string
   category?: string | null
-}
-
-const CATEGORY_LABELS: Record<string, string> = {
-  neurocirugia: "Neurocirugía",
-  columna: "Columna",
-  accesorios: "Accesorios",
-  traumatologia: "Traumatología",
-  ortopedia: "Ortopedia",
 }
 
 const contactSchema = z.object({
@@ -93,6 +83,7 @@ type FormFeedback = { status: "success" | "error"; message: string } | null
 
 type ContactPageClientProps = {
   products: ContactProductOption[]
+  categories: { id: string; label: string }[]
 }
 
 function buildProductMessage(productName?: string | null) {
@@ -135,13 +126,13 @@ const faqs = [
   },
 ]
 
-function formatCategoryLabel(category?: string | null) {
+function formatCategoryLabel(category?: string | null, categories?: { id: string; label: string }[]) {
   if (!category) return "Otros"
-  const key = category.toLowerCase().trim()
-  return CATEGORY_LABELS[key] ?? key.charAt(0).toUpperCase() + key.slice(1)
+  const match = categories?.find((c) => c.id === category)
+  return match ? match.label : category.charAt(0).toUpperCase() + category.slice(1)
 }
 
-export function ContactPageClient({ products }: ContactPageClientProps) {
+export function ContactPageClient({ products, categories }: ContactPageClientProps) {
   const searchParams = useSearchParams()
   const { toast } = useToast()
   const hasPrefilledFromQuery = useRef(false)
@@ -160,20 +151,26 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
   const groupedProducts = useMemo(() => {
     const groups: Record<string, ContactProductOption[]> = {}
     products.forEach((product) => {
-      const key = product.category?.toLowerCase().trim() || "otros"
+      const key =
+        typeof product.category === "string"
+          ? product.category.toLowerCase().trim()
+          : "otros"
       if (!groups[key]) {
         groups[key] = []
       }
       groups[key].push(product)
     })
-
     Object.values(groups).forEach((list) => {
       list.sort((a, b) => a.name.localeCompare(b.name, "es"))
     })
-
     const orderedKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b, "es"))
-    return orderedKeys.map((key) => ({ key, label: formatCategoryLabel(key), items: groups[key] }))
-  }, [products])
+    return orderedKeys.map((key) => ({
+      key,
+      label: formatCategoryLabel(key, categories),
+      items: groups[key],
+    }))
+  }, [products, categories])
+
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
@@ -208,13 +205,12 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
 
   useEffect(() => {
     if (hasPrefilledFromQuery.current) return
-
     const productParam = searchParams.get("product")
     if (productParam) {
       const decodedParam = decodeURIComponent(productParam).trim().toLowerCase()
-      const match = products.find((product) => (
-        product.name?.toLowerCase() === decodedParam || product.id?.toLowerCase() === decodedParam
-      ))
+      const match = products.find(
+        (product) => product.name?.toLowerCase() === decodedParam || product.id?.toLowerCase() === decodedParam,
+      )
       if (match) {
         form.setValue("productId", match.id, { shouldValidate: true })
         const currentMessage = form.getValues("message")
@@ -223,16 +219,13 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
         }
       }
     }
-
     hasPrefilledFromQuery.current = true
   }, [form, products, searchParams])
 
   const onSubmit = async (values: ContactFormValues) => {
     setFormFeedback(null)
-
     const { productId, ...rest } = values
     const matchedProduct = productId ? productMap.get(productId) : undefined
-
     const payload = {
       ...rest,
       organization: rest.organization?.trim() ? rest.organization.trim() : undefined,
@@ -240,29 +233,24 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
       message: rest.message.trim(),
       product: matchedProduct?.name?.trim() ? matchedProduct.name : undefined,
     }
-
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
-
       const data = await response.json()
       if (!response.ok || !data.ok) {
         throw new Error(data.error || "No se pudo enviar el mensaje.")
       }
-
       toast({
         title: "Mensaje enviado",
         description: "Nuestro equipo se pondrá en contacto en menos de 24 horas hábiles.",
       })
-
       setFormFeedback({
         status: "success",
         message: "¡Mensaje enviado! Nos pondremos en contacto en menos de 24 horas hábiles.",
       })
-
       form.reset({
         name: "",
         email: "",
@@ -277,13 +265,11 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Ocurrió un error inesperado. Intenta nuevamente en unos minutos."
-
       toast({
         title: "No se pudo enviar",
         description: message,
         variant: "destructive",
       })
-
       setFormFeedback({ status: "error", message })
     }
   }
@@ -305,12 +291,16 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                 prioritarias para tu equipo médico.
               </p>
             </div>
-
             <div className="mt-2 flex flex-wrap justify-center gap-4">
               <Button size="lg" className="px-8 py-6 text-base" asChild>
                 <a href="#contacto-form">Agenda una consultoría</a>
               </Button>
-              <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90 px-8 py-6 text-base" asChild>
+              <Button
+                size="lg"
+                variant="secondary"
+                className="bg-white text-primary hover:bg-white/90 px-8 py-6 text-base"
+                asChild
+              >
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                   Escríbenos por WhatsApp
                 </a>
@@ -319,7 +309,6 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
           </div>
         </div>
       </section>
-
       <section className="bg-background py-20">
         <div className="container mx-auto grid max-w-6xl gap-12 px-4 lg:grid-cols-[minmax(0,1fr)_380px]">
           <Card id="contacto-form" className="border-border/60 shadow-lg">
@@ -341,7 +330,6 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                       <AlertDescription>{formFeedback.message}</AlertDescription>
                     </Alert>
                   )}
-
                   <div className="grid gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
@@ -365,7 +353,9 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                           <FormControl>
                             <Input placeholder="tu@centromedico.com" type="email" autoComplete="email" {...field} />
                           </FormControl>
-                          <FormDescription>Usaremos este correo para enviarte fichas técnicas y seguimiento.</FormDescription>
+                          <FormDescription>
+                            Usaremos este correo para enviarte fichas técnicas y seguimiento.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -428,7 +418,6 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                                   })
                                   return
                                 }
-
                                 field.onChange(value)
                                 const targetProduct = productMap.get(value)
                                 form.setValue("message", buildProductMessage(targetProduct?.name), {
@@ -467,9 +456,7 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                       )}
                     />
                   </div>
-
                   <Separator className="my-2" />
-
                   <div className="grid gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
@@ -484,7 +471,10 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                               onValueChange={(value) => field.onChange(value as ContactFormValues["contactMethod"])}
                             >
                               {Object.entries(contactMethodCopy).map(([value, label]) => (
-                                <div key={value} className="flex items-center gap-3 rounded-lg border border-border/60 px-4 py-3">
+                                <div
+                                  key={value}
+                                  className="flex items-center gap-3 rounded-lg border border-border/60 px-4 py-3"
+                                >
                                   <RadioGroupItem value={value} id={`contact-${value}`} />
                                   <Label htmlFor={`contact-${value}`} className="cursor-pointer text-sm font-medium">
                                     {label}
@@ -497,7 +487,6 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="preferredSchedule"
@@ -529,7 +518,6 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                       )}
                     />
                   </div>
-
                   <FormField
                     control={form.control}
                     name="message"
@@ -573,11 +561,9 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                       </FormItem>
                     )}
                   />
-
                   <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
                     {isSubmitting ? "Enviando..." : "Enviar mensaje"}
                   </Button>
-
                   <p className="text-center text-sm text-muted-foreground">
                     Tiempo de respuesta promedio: &lt; 12 h hábiles. Nunca compartiremos tus datos con terceros.
                   </p>
@@ -585,7 +571,6 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
               </Form>
             </CardContent>
           </Card>
-
           <div className="space-y-8 lg:sticky lg:top-24">
             <Card className="border-border/60">
               <CardHeader>
@@ -602,7 +587,10 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">Correo principal</p>
-                    <a href="mailto:ventas@apolomedical.com.pe" className="text-muted-foreground transition-colors hover:text-primary">
+                    <a
+                      href="mailto:ventas@apolomedical.com.pe"
+                      className="text-muted-foreground transition-colors hover:text-primary"
+                    >
                       ventas@apolomedical.com.pe
                     </a>
                     <p className="text-xs text-muted-foreground/80">Respuesta en menos de 24 horas hábiles.</p>
@@ -667,7 +655,6 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
                 </div>
               </CardFooter>
             </Card>
-
             <Card className="border-border/50">
               <CardHeader>
                 <CardTitle className="text-lg text-foreground">Preguntas frecuentes</CardTitle>
@@ -687,7 +674,6 @@ export function ContactPageClient({ products }: ContactPageClientProps) {
           </div>
         </div>
       </section>
-
       <section className="bg-muted/30 py-20">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-5xl text-center">

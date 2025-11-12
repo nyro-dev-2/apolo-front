@@ -21,21 +21,16 @@ export default defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: "category",
       title: "Categoría",
-      type: "string",
-      options: {
-        list: [
-          { title: "Neurocirugía", value: "neurocirugia" },
-          { title: "Traumatología", value: "traumatologia" },
-          { title: "Ortopedia", value: "ortopedia" },
-          { title: "Columna", value: "columna" },
-        ],
-        layout: "dropdown",
-      },
+      type: "reference",
+      to: [{ type: "category" }],
       validation: (Rule) => Rule.required(),
+      description: "Selecciona la categoría a la que pertenece este producto.",
     }),
+
     defineField({
       name: "manufacturer",
       title: "Fabricante / Marca",
@@ -53,12 +48,14 @@ export default defineType({
       type: "text",
       rows: 5,
     }),
+
     defineField({
       name: "features",
       title: "Características principales",
       type: "array",
       of: [{ type: "string" }],
     }),
+
     defineField({
       name: "images",
       title: "Imágenes del producto",
@@ -78,10 +75,11 @@ export default defineType({
       ],
     }),
   ],
+
   preview: {
     select: {
       title: "name",
-      subtitle: "category",
+      subtitle: "category->title",
       media: "images.0",
     },
   },

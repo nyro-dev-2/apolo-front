@@ -1,5 +1,6 @@
-import product from './product'
+import product from "./product"
+import category from "./category"
 
 export const schema = {
-  types: [product],
+  types: [product, category],
 }
