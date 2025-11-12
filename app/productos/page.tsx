@@ -25,13 +25,6 @@ type Product = {
   slug: string
 }
 
-type CategorySummary = {
-  id: string | "all"
-  label: string
-  description?: string
-  count: number
-}
-
 const PRODUCTS_QUERY = `
 *[_type == "product"]{
   _id,
@@ -58,15 +51,28 @@ const PRODUCT_CATEGORY_INFO: Array<{
   { id: "accesorios", label: "Accesorios" },
 ]
 
+const CATEGORIES_QUERY = `
+  *[_type == "category"]{
+    "id": coalesce(slug.current, _id),
+    "label": title,
+    description
+  } | order(title asc)
+`
+
+type CategoryDocument = {
+  id: string
+  label: string
+  description?: string
+}
+
 type CategorySummary = {
   id: string | "all"
   label: string
   description?: string
   count: number
 }
-`
 
-function buildCategorySummaries(list: Product[]): CategorySummary[] {
+function buildCategorySummaries(list: Product[], categories: CategoryDocument[]): CategorySummary[] {
   const categoriesMap = new Map<string, CategorySummary>()
 
   PRODUCT_CATEGORY_INFO.forEach((category) => {
@@ -78,13 +84,21 @@ function buildCategorySummaries(list: Product[]): CategorySummary[] {
     })
   })
 
+  categories.forEach((category) => {
+    categoriesMap.set(category.id, {
+      id: category.id,
+      label: category.label,
+      description: category.description,
+      count: categoriesMap.get(category.id)?.count ?? 0,
+    })
+  })
+
   list.forEach((product) => {
     const categoryId = product.category ?? "sin-categoria"
-    const staticInfo = PRODUCT_CATEGORY_INFO.find((cat) => cat.id === categoryId)
     const current = categoriesMap.get(categoryId)
 
-    const resolvedLabel = staticInfo?.label ?? product.categoryLabel ?? categoryId
-    const resolvedDescription = staticInfo?.description
+    const resolvedLabel = current?.label ?? product.categoryLabel ?? categoryId
+    const resolvedDescription = current?.description
 
     if (current) {
       current.count += 1
@@ -107,7 +121,7 @@ function buildCategorySummaries(list: Product[]): CategorySummary[] {
       id: "all",
       label: "Todos",
       description: "Catálogo completo de soluciones Apolo Medical HT",
-      count: products.length,
+      count: list.length,
     },
     ...summaries,
   ]
@@ -129,11 +143,7 @@ export const metadata: Metadata = {
 export default async function ProductsPage() {
   const [products, categories] = await Promise.all([
     sanityClient.fetch<Product[]>(PRODUCTS_QUERY, {}, { next: { revalidate: 60 } }),
-    sanityClient.fetch<{ id: string; label: string; description?: string }[]>(
-      CATEGORIES_QUERY,
-      {},
-      { next: { revalidate: 60 } }
-    ),
+    sanityClient.fetch<CategoryDocument[]>(CATEGORIES_QUERY, {}, { next: { revalidate: 60 } }),
   ])
 
   const categorySummaries = buildCategorySummaries(products, categories)
