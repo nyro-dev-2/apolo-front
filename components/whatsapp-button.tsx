@@ -1,7 +1,7 @@
 "use client"
 
 import { MessageCircle } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 /**
  * Floating WhatsApp button component
@@ -9,6 +9,45 @@ import { useState } from "react"
  */
 export function WhatsAppButton() {
   const [isHovered, setIsHovered] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(false)
+  const [isActivated, setIsActivated] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return
+    }
+
+    const enable = () => setIsActivated(true)
+    const events = ["pointerdown", "keydown", "touchstart"] as const
+
+    events.forEach((event) => window.addEventListener(event, enable, { once: true }))
+
+    return () => {
+      events.forEach((event) => window.removeEventListener(event, enable))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isActivated || typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return
+    }
+
+    const matcher = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const updatePreference = () => setReduceMotion(matcher.matches)
+    updatePreference()
+
+    if (typeof matcher.addEventListener === "function") {
+      matcher.addEventListener("change", updatePreference)
+      return () => matcher.removeEventListener("change", updatePreference)
+    }
+
+    matcher.addListener(updatePreference)
+    return () => matcher.removeListener(updatePreference)
+  }, [isActivated])
+
+  if (!isActivated) {
+    return null
+  }
   
   // WhatsApp configuration
   const phoneNumber = "51957359298" // Peru country code + number
@@ -45,19 +84,23 @@ export function WhatsAppButton() {
           isHovered ? "ring-4 ring-[#25D366]/30" : ""
         }`}
       >
-        <img 
-          src="/whatsappicon.png" 
-          alt="WhatsApp" 
-          className="h-9 w-9" 
-        />
-        
+        <MessageCircle className="h-8 w-8" aria-hidden="true" />
+
         {/* Pulse animation */}
-        <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-75" aria-hidden="true" />
+        {!reduceMotion && (
+          <span
+            className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-75"
+            aria-hidden="true"
+          />
+        )}
       </div>
       
       {/* Active indicator badge */}
       <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-green-400 border-2 border-white shadow-md">
-        <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse" aria-hidden="true" />
+        <span
+          className={`absolute inset-0 rounded-full bg-green-400 ${reduceMotion ? "" : "animate-pulse"}`}
+          aria-hidden="true"
+        />
       </div>
     </a>
   )

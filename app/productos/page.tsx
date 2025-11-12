@@ -19,7 +19,7 @@ type Product = {
   categoryLabel?: string
   shortDescription?: string
   fullDescription?: string
-  features?: { value: string }[]
+  features?: string[]
   specifications?: { label: string; value: string }[]
   images?: { url: string }[]
   slug: string
@@ -37,8 +37,8 @@ const PRODUCTS_QUERY = `
   _id,
   name,
   manufacturer,
-  "category": category->slug.current,
-  "categoryLabel": category->title,
+  "category": coalesce(category->slug.current, category),
+  "categoryLabel": coalesce(category->title, category),
   shortDescription,
   fullDescription,
   features,
@@ -48,22 +48,60 @@ const PRODUCTS_QUERY = `
 } | order(name asc)
 `
 
-const CATEGORIES_QUERY = `
-*[_type == "category"] | order(title asc){
-  "id": slug.current,
-  "label": title,
-  description
+const PRODUCT_CATEGORY_INFO: Array<{
+  id: string
+  label: string
+  description?: string
+}> = [
+  { id: "neurocirugia", label: "Neurocirugía" },
+  { id: "columna", label: "Columna" },
+  { id: "accesorios", label: "Accesorios" },
+]
+
+type CategorySummary = {
+  id: string | "all"
+  label: string
+  description?: string
+  count: number
 }
 `
 
-function buildCategorySummaries(
-  products: Product[],
-  categories: { id: string; label: string; description?: string }[]
-): CategorySummary[] {
-  const summaries = categories.map((cat) => ({
-    ...cat,
-    count: products.filter((p) => p.category === cat.id).length,
-  }))
+function buildCategorySummaries(list: Product[]): CategorySummary[] {
+  const categoriesMap = new Map<string, CategorySummary>()
+
+  PRODUCT_CATEGORY_INFO.forEach((category) => {
+    categoriesMap.set(category.id, {
+      id: category.id,
+      label: category.label,
+      description: category.description,
+      count: 0,
+    })
+  })
+
+  list.forEach((product) => {
+    const categoryId = product.category ?? "sin-categoria"
+    const staticInfo = PRODUCT_CATEGORY_INFO.find((cat) => cat.id === categoryId)
+    const current = categoriesMap.get(categoryId)
+
+    const resolvedLabel = staticInfo?.label ?? product.categoryLabel ?? categoryId
+    const resolvedDescription = staticInfo?.description
+
+    if (current) {
+      current.count += 1
+    } else {
+      categoriesMap.set(categoryId, {
+        id: categoryId,
+        label: resolvedLabel,
+        description: resolvedDescription,
+        count: 1,
+      })
+    }
+  })
+
+  const summaries = Array.from(categoriesMap.values()).sort((a, b) =>
+    a.label.localeCompare(b.label, "es", { sensitivity: "base" })
+  )
+
   return [
     {
       id: "all",
@@ -149,7 +187,9 @@ export default async function ProductsPage() {
           category: p.category,
           shortDescription: p.shortDescription ?? "",
           fullDescription: p.fullDescription ?? "",
-          features: p.features?.map((f) => f.value) ?? [],
+          features: Array.isArray(p.features)
+            ? p.features.filter((feature): feature is string => typeof feature === "string")
+            : [],
           specifications: p.specifications ?? [],
           images: Array.isArray(p.images)
             ? p.images
@@ -172,7 +212,7 @@ export default async function ProductsPage() {
               <Link href="/contacto">Solicitar cotización</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-lg px-8 py-6">
-              <Link href="/distribucion">Conocer soporte regional</Link>
+              <Link href="/contacto">Hablar con un asesor</Link>
             </Button>
           </div>
         </div>

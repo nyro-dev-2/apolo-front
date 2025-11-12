@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const mobileMenuId = "primary-navigation-mobile"
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +40,7 @@ export function Navigation() {
             <Link href="/" className="flex items-center gap-3 group" aria-label="Apolo Medical SAC">
               <div className="relative h-14 w-14 flex-shrink-0">
                 <Image
-                  src="/logos/apolo-logo.png"
+                  src="/logos/apolo-logo.webp"
                   alt="Logotipo de Apolo Medical"
                   fill
                   priority
@@ -75,14 +76,28 @@ export function Navigation() {
             </div>
 
             {/* Mobile Menu Button */}
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setIsOpen(!isOpen)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+              aria-expanded={isOpen}
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+            >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
 
           {/* Mobile Navigation */}
           {isOpen && (
-            <div className="lg:hidden border-t border-border py-6 animate-fade-in">
+            <div
+              id={mobileMenuId}
+              className="lg:hidden border-t border-border py-6 animate-fade-in"
+              role="navigation"
+              aria-label="Menú principal"
+            >
               <div className="flex flex-col gap-5">
                 {navLinks.map((link) => (
                   <Link
