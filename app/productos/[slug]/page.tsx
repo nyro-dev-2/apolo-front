@@ -5,10 +5,10 @@ import type { Metadata } from "next"
 import { ArrowLeft, CheckCircle2, Factory } from "lucide-react"
 
 import { sanityClient } from "@/lib/sanity"
-import { ProductImageCarousel } from "@/components/product-image-carousel"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { ProductImageCarouselLazy } from "@/components/product-image-carousel.lazy"
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://apolomedical.com.pe"
 
@@ -89,7 +89,8 @@ export default async function ProductDetailPage({
       _id,
       name,
       manufacturer,
-      category,
+      "category": coalesce(category->slug.current, category),
+      "categoryLabel": coalesce(category->title, category),
       shortDescription,
       fullDescription,
       features,
@@ -101,15 +102,18 @@ export default async function ProductDetailPage({
   if (!product) notFound()
 
   const relatedProducts = await sanityClient.fetch(
-    `*[_type == "product" && category == $category && slug.current != $slug][0...3]{
+    `*[_type == "product" && slug.current != $slug && (
+        category->slug.current == $categorySlug || category == $categorySlug
+      )][0...3]{
       _id,
       name,
       shortDescription,
-      category,
+      "category": coalesce(category->slug.current, category),
+      "categoryLabel": coalesce(category->title, category),
       "slug": slug.current,
       "images": images[]{ "url": asset->url }
     }`,
-    { category: product.category, slug }
+    { categorySlug: product.category, slug }
   )
 
   const normalizeText = (value: any): string => {
@@ -160,7 +164,7 @@ export default async function ProductDetailPage({
           <div className="mx-auto max-w-6xl">
             <div className="mb-12 text-center">
               <Badge variant="secondary" className="mb-4 text-sm capitalize">
-                {normalizeText(product.category)}
+                {normalizeText(product.categoryLabel ?? product.category)}
               </Badge>
               <h1 className="text-balance font-serif text-4xl font-bold text-foreground md:text-5xl">
                 {normalizeText(product.name)}
@@ -175,7 +179,7 @@ export default async function ProductDetailPage({
 
             <div className="mb-16 grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)] lg:items-start">
               <div className="order-2 rounded-3xl border border-border/40 bg-muted/20 p-4 shadow-sm lg:order-1">
-                <ProductImageCarousel
+                <ProductImageCarouselLazy
                   images={product.images?.map((img: any) => img.url) || []}
                   productName={normalizeText(product.name)}
                   className="h-[360px] md:h-[420px]"
@@ -246,7 +250,7 @@ export default async function ProductDetailPage({
                   </div>
                   <CardContent className="flex flex-1 flex-col gap-3 p-6">
                     <Badge variant="outline" className="mb-2 border-primary/30 text-primary capitalize">
-                      {normalizeText(p.category)}
+                      {normalizeText(p.categoryLabel ?? p.category)}
                     </Badge>
                     <h3 className="text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
                       {normalizeText(p.name)}

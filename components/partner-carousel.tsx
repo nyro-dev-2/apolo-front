@@ -2,28 +2,25 @@
 
 import Image from "next/image"
 
-interface PartnerCarouselProps {
+export type PartnerCarouselProps = {
   backgroundColor?: string
 }
 
 export function PartnerCarousel({ backgroundColor = "bg-secondary/30" }: PartnerCarouselProps) {
   const partners = [
-    { name: "ENDAC", logo: "/logos/endac-logo.png" },
-    { name: "PRODORTH", logo: "/logos/prodorth-logo.png" },
-    { name: "HC BIOLOGICS", logo: "/logos/hcbiologics_logo.png" },
-    { name: "SCIENCE MEDIC", logo: "/logos/Science_Medic.png" },
-    { name: "GESCO", logo: "/logos/gesco_logo.png" },
+    { name: "ENDAC", logo: "/logos/endac-logo.webp" },
+    { name: "PRODORTH", logo: "/logos/prodorth-logo.webp" },
+    { name: "HC BIOLOGICS", logo: "/logos/hcbiologics_logo.webp" },
+    { name: "SCIENCE MEDIC", logo: "/logos/Science_Medic.webp" },
+    { name: "GESCO", logo: "/logos/gesco_logo.webp" },
     { name: "HONGHU", logo: "/logos/hon_p.png" },
   ]
-
-  const duplicatedPartners = [...partners, ...partners, ...partners, ...partners, 
-                             ...partners, ...partners, ...partners, ...partners]
 
   return (
     <div className="relative overflow-hidden">
       <div className="container mx-auto px-4 mb-8">
-        <h2 className="text-3xl font-serif font-bold text-center text-foreground mb-3">Socios Internacionales</h2>
-        <p className="text-center text-muted-foreground text-lg max-w-2xl mx-auto">
+        <h2 className="mb-3 text-center font-serif text-3xl font-bold text-foreground">Socios Internacionales</h2>
+        <p className="mx-auto max-w-2xl text-center text-lg text-foreground/90">
           Representamos las marcas más prestigiosas del sector médico mundial
         </p>
       </div>
@@ -33,17 +30,27 @@ export function PartnerCarousel({ backgroundColor = "bg-secondary/30" }: Partner
         <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-muted/30 to-transparent z-10"></div>
         
         <div className="overflow-hidden">
-          <div className="flex w-max gap-16 animate-marquee">
-            {duplicatedPartners.map((partner, index) => (
-              <Image
-                key={`${partner.name}-${index}`}
-                src={partner.logo || "/placeholder.svg"}
-                alt={`Logo ${partner.name}`}
-                width={200}
-                height={128}
-                className="flex-shrink-0 h-32 w-auto object-contain"
-                sizes="(max-width: 768px) 50vw, 200px"
-              />
+          <div className="flex w-max gap-16 animate-marquee motion-reduce:animate-none">
+            {[false, true].map((isDuplicate) => (
+              <div
+                key={isDuplicate ? "partners-duplicate" : "partners"}
+                className="flex items-center gap-16"
+                aria-hidden={isDuplicate}
+                role={isDuplicate ? "presentation" : undefined}
+              >
+                {partners.map((partner) => (
+                  <Image
+                    key={`${partner.name}-${isDuplicate ? "duplicate" : "original"}`}
+                    src={partner.logo || "/placeholder.svg"}
+                    alt={isDuplicate ? "" : `Logo ${partner.name}`}
+                    width={180}
+                    height={110}
+                    className="flex-shrink-0 h-28 w-auto object-contain"
+                    sizes="(max-width: 768px) 45vw, 180px"
+                    priority={!isDuplicate && partner.name === partners[0].name}
+                  />
+                ))}
+              </div>
             ))}
           </div>
         </div>

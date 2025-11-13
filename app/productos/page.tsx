@@ -16,9 +16,10 @@ type Product = {
   name: string
   manufacturer: string
   category: string
+  categoryLabel?: string
   shortDescription?: string
   fullDescription?: string
-  features?: { value: string }[]
+  features?: string[]
   specifications?: { label: string; value: string }[]
   images?: { url: string }[]
   slug: string
@@ -29,23 +30,40 @@ const PRODUCTS_QUERY = `
   _id,
   name,
   manufacturer,
-  category,
+  "category": coalesce(category->slug.current, category),
+  "categoryLabel": coalesce(category->title, category),
   shortDescription,
   fullDescription,
   features,
   specifications,
-  "images": images[]{
-    "url": coalesce(asset->url, "")
-  },
+  "images": images[] { "url": coalesce(asset->url, "") },
   "slug": slug.current
 } | order(name asc)
 `
 
-const PRODUCT_CATEGORY_INFO = [
+const PRODUCT_CATEGORY_INFO: Array<{
+  id: string
+  label: string
+  description?: string
+}> = [
   { id: "neurocirugia", label: "Neurocirugía" },
   { id: "columna", label: "Columna" },
   { id: "accesorios", label: "Accesorios" },
 ]
+
+const CATEGORIES_QUERY = `
+  *[_type == "category"]{
+    "id": coalesce(slug.current, _id),
+    "label": title,
+    description
+  } | order(title asc)
+`
+
+type CategoryDocument = {
+  id: string
+  label: string
+  description?: string
+}
 
 type CategorySummary = {
   id: string | "all"
@@ -54,11 +72,50 @@ type CategorySummary = {
   count: number
 }
 
-function buildCategorySummaries(list: Product[]): CategorySummary[] {
-  const summaries = PRODUCT_CATEGORY_INFO.map((category) => ({
-    ...category,
-    count: list.filter((product) => product.category === category.id).length,
-  }))
+function buildCategorySummaries(list: Product[], categories: CategoryDocument[]): CategorySummary[] {
+  const categoriesMap = new Map<string, CategorySummary>()
+
+  PRODUCT_CATEGORY_INFO.forEach((category) => {
+    categoriesMap.set(category.id, {
+      id: category.id,
+      label: category.label,
+      description: category.description,
+      count: 0,
+    })
+  })
+
+  categories.forEach((category) => {
+    categoriesMap.set(category.id, {
+      id: category.id,
+      label: category.label,
+      description: category.description,
+      count: categoriesMap.get(category.id)?.count ?? 0,
+    })
+  })
+
+  list.forEach((product) => {
+    const categoryId = product.category ?? "sin-categoria"
+    const current = categoriesMap.get(categoryId)
+
+    const resolvedLabel = current?.label ?? product.categoryLabel ?? categoryId
+    const resolvedDescription = current?.description
+
+    if (current) {
+      current.count += 1
+    } else {
+      categoriesMap.set(categoryId, {
+        id: categoryId,
+        label: resolvedLabel,
+        description: resolvedDescription,
+        count: 1,
+      })
+    }
+  })
+
+  const summaries = Array.from(categoriesMap.values()).sort((a, b) =>
+    a.label.localeCompare(b.label, "es", { sensitivity: "base" })
+  )
+
   return [
     {
       id: "all",
@@ -73,9 +130,7 @@ function buildCategorySummaries(list: Product[]): CategorySummary[] {
 export const metadata: Metadata = {
   title: pageTitle,
   description: pageDescription,
-  alternates: {
-    canonical: `${SITE_URL}/productos`,
-  },
+  alternates: { canonical: `${SITE_URL}/productos` },
   openGraph: {
     title: pageTitle,
     description: pageDescription,
@@ -86,15 +141,21 @@ export const metadata: Metadata = {
 }
 
 export default async function ProductsPage() {
-  const products: Product[] = await sanityClient.fetch(PRODUCTS_QUERY, {}, { next: { revalidate: 60 } })
-  const categories = buildCategorySummaries(products)
-  const manufacturers = Array.from(new Set(products.map((p) => p.manufacturer))).sort()
-  const highlightedCategories = categories.filter((c) => c.id !== "all")
+  const [products, categories] = await Promise.all([
+    sanityClient.fetch<Product[]>(PRODUCTS_QUERY, {}, { next: { revalidate: 60 } }),
+    sanityClient.fetch<CategoryDocument[]>(CATEGORIES_QUERY, {}, { next: { revalidate: 60 } }),
+  ])
+
+  const categorySummaries = buildCategorySummaries(products, categories)
+  const manufacturers: string[] = Array.from(
+    new Set(products.map((p) => String(p.manufacturer || "")))
+  ).sort()
+  const highlightedCategories = categorySummaries.filter((c) => c.id !== "all")
 
   return (
     <div className="flex flex-col">
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-secondary py-24 text-primary-foreground">
-        <div className="absolute inset-0 bg-[url('/medical-pattern.svg')] opacity-10" aria-hidden="true" />
+  <div className="absolute inset-0 opacity-80 bg-hero-pattern" aria-hidden="true" />
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <Badge variant="secondary" className="mb-4 border-white/30 bg-white/20 text-white">
@@ -108,7 +169,6 @@ export default async function ProductsPage() {
               con soporte local y documentación completa.
             </p>
           </div>
-
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {highlightedCategories.map((category) => (
               <div
@@ -127,9 +187,8 @@ export default async function ProductsPage() {
           </div>
         </div>
       </section>
-
       <ProductExplorer
-        categories={categories}
+        categories={categorySummaries}
         manufacturers={manufacturers}
         products={products.map((p) => ({
           id: p.slug,
@@ -138,16 +197,17 @@ export default async function ProductsPage() {
           category: p.category,
           shortDescription: p.shortDescription ?? "",
           fullDescription: p.fullDescription ?? "",
-          features: p.features?.map((f) => f.value) ?? [],
+          features: Array.isArray(p.features)
+            ? p.features.filter((feature): feature is string => typeof feature === "string")
+            : [],
           specifications: p.specifications ?? [],
           images: Array.isArray(p.images)
             ? p.images
                 .map((i) => i?.url)
-                .filter((url) => typeof url === "string" && url.startsWith("http"))
+                .filter((url): url is string => typeof url === "string" && url.startsWith("http"))
             : [],
         }))}
       />
-
       <section className="bg-gradient-to-br from-muted to-muted/40 py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="mb-4 font-serif text-3xl font-semibold text-foreground md:text-4xl">
@@ -162,7 +222,7 @@ export default async function ProductsPage() {
               <Link href="/contacto">Solicitar cotización</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-lg px-8 py-6">
-              <Link href="/distribucion">Conocer soporte regional</Link>
+              <Link href="/contacto">Hablar con un asesor</Link>
             </Button>
           </div>
         </div>

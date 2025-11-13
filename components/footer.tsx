@@ -13,16 +13,16 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Company Info */}
           <div>
-            <h3 className="mb-4 text-lg font-bold text-primary">Apolo Medical HT</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="mb-4 text-lg font-bold text-primary">Apolo Medical HT</h2>
+            <p className="text-sm leading-relaxed text-foreground/85">
               Innovación y confianza en soluciones médicas avanzadas para columna y neurocirugía.
             </p>
           </div>
 
           {/* Contact */}
           <div>
-            <h4 className="mb-4 font-semibold text-foreground">Contacto</h4>
-            <div className="space-y-3 text-sm text-muted-foreground">
+            <h3 className="mb-4 font-semibold text-foreground">Contacto</h3>
+            <div className="space-y-3 text-sm text-foreground/85">
               <div className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5 flex-shrink-0" />
                 <a href="mailto:ventas@apolomedical.com.pe" className="hover:text-primary transition-colors">
@@ -45,8 +45,8 @@ export function Footer() {
 
           {/* Partners */}
           <div>
-            <h4 className="mb-4 font-semibold text-foreground">Socios Internacionales</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h3 className="mb-4 font-semibold text-foreground">Socios Internacionales</h3>
+            <ul className="space-y-2 text-sm text-foreground/80">
               {partners.map((partner) => (
                 <li key={partner}>{partner}</li>
               ))}
@@ -55,8 +55,8 @@ export function Footer() {
 
           {/* Logistics */}
           <div>
-            <h4 className="mb-4 font-semibold text-foreground">Logística</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h3 className="mb-4 font-semibold text-foreground">Logística</h3>
+            <ul className="space-y-2 text-sm text-foreground/80">
               {logistics.map((company) => (
                 <li key={company}>{company}</li>
               ))}
@@ -65,10 +65,10 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border pt-8 text-center">
-          <p className="text-sm text-muted-foreground mb-2">
+          <p className="mb-2 text-sm text-foreground/80">
             &copy; {new Date().getFullYear()} Apolo Medical HT S.A.C. Todos los derechos reservados.
           </p>
-          <p className="text-xs text-muted-foreground/70">
+          <p className="text-xs text-foreground/70">
             Made with 🤖 by <span className="font-medium">Nyro</span>
           </p>
         </div>
