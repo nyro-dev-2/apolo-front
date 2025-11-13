@@ -46,7 +46,7 @@ export default function HomePage() {
       <section id="hero" className="relative overflow-hidden">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="/neurosurgery-medical-equipment-operating-room.webp"
+            src="/mainpage/neurosurgery-medical-equipment-operating-room.webp"
             alt="Equipo quirúrgico especializado realizando una cirugía en sala"
             fill
             priority
@@ -188,7 +188,7 @@ export default function HomePage() {
       </section>
 
       <section id="tecnologia" className="relative py-24 overflow-hidden">
-  <div className="absolute inset-0 bg-[url('/advanced-neurosurgery-equipment.webp')] bg-cover bg-center" />
+  <div className="absolute inset-0 bg-[url('/mainpage/advanced-neurosurgery-equipment.webp')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/85 to-white/80" />
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-6xl">
@@ -242,7 +242,7 @@ export default function HomePage() {
                   <video 
                     className="w-full h-full object-cover"
                     controls
-                    poster="/video-thumb.webp"
+                    poster="/mainpage/video-thumb.webp"
                     preload="metadata"
                   >
                     <source src="/videos/presentationvid.mp4" type="video/mp4" />
@@ -277,7 +277,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <Image
                   fill
-                  src="/category-cranial-systems.webp"
+                  src="/mainpage/category-cranial-systems.webp"
                   alt="Equipo neuroquirúrgico para sistemas craneales"
                   className="object-cover transition-smooth duration-500 group-hover:scale-110"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -305,7 +305,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <Image
                   fill
-                  src="/category-spinal-implants.webp"
+                  src="/mainpage/category-spinal-implants.webp"
                   alt="Implantes espinales de titanio"
                   className="object-cover transition-smooth duration-500 group-hover:scale-110"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -333,7 +333,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent z-10" />
                 <Image
                   fill
-                  src="/category-neuroendoscopy.webp"
+                  src="/mainpage/category-neuroendoscopy.webp"
                   alt="Instrumental para neuroendoscopía"
                   className="object-cover transition-smooth duration-500 group-hover:scale-110"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

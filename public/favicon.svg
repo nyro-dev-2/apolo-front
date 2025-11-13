@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
-  <title id="title">Logotipo de Apolo Medical</title>
-  <rect width="64" height="64" rx="12" fill="#ffffff"/>
-  <circle cx="32" cy="32" r="23" fill="none" stroke="#e31e24" stroke-width="4"/>
-  <path d="M16 32h5.8l3.2-7.4L31 40l4.6-13.6 3.2 7.7H48" fill="none" stroke="#1ea9f2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M23.5 46L32 18l8.5 28h-5.1L32 34.2 28.6 46z" fill="#111111"/>
-</svg>
