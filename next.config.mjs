@@ -4,7 +4,7 @@ const CONTENT_SECURITY_POLICY = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://cdn.sanity.io",
   "font-src 'self' data:",
-  "connect-src 'self' https://cdn.sanity.io https://vitals.vercel-insights.com",
+  "connect-src 'self' https://cdn.sanity.io https://*.api.sanity.io https://vitals.vercel-insights.com",
   "media-src 'self' https://cdn.sanity.io",
   "frame-ancestors 'self'",
   "form-action 'self'",
