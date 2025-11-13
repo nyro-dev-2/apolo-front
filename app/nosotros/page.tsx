@@ -104,7 +104,7 @@ export default function AboutPage() {
               <div className="relative h-[400px] overflow-hidden rounded-lg order-2 md:order-1">
                 <Image
                   fill
-                  src="/quality-control-medical-devices-laboratory.jpg"
+                  src="/nosotros/quality-control-medical-devices-laboratory.jpg"
                   alt="Profesional verificando dispositivos médicos en laboratorio"
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -160,7 +160,7 @@ export default function AboutPage() {
               <div className="relative h-[400px] overflow-hidden rounded-lg">
                 <Image
                   fill
-                  src="/medical-team-consultation-hospital.jpg"
+                  src="/nosotros/medical-team-consultation-hospital.jpg"
                   alt="Equipo médico consultando en hospital"
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"

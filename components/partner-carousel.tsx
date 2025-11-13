@@ -13,7 +13,7 @@ export function PartnerCarousel({ backgroundColor = "bg-secondary/30" }: Partner
     { name: "HC BIOLOGICS", logo: "/logos/hcbiologics_logo.webp" },
     { name: "SCIENCE MEDIC", logo: "/logos/Science_Medic.webp" },
     { name: "GESCO", logo: "/logos/gesco_logo.webp" },
-    { name: "HONGHU", logo: "/logos/hon_p.png" },
+    { name: "HONGHU", logo: "/logos/hon_p.webp" },
   ]
 
   return (
