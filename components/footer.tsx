@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-react"
 import { COMPANY_ADDRESS } from "@/lib/company-info"
 
 export function Footer() {
-  const partners = ["ENDAC", "PRODORTH", "HC BIOLOGICS", "BONETECH"]
+  const partners = ["ENDAC", "PRODORTH", "HC BIOLOGICS", "GESCO"]
 
   const logistics = ["Vía aérea", "Vía terrestre"]
 

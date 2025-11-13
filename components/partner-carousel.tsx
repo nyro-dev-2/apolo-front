@@ -13,6 +13,7 @@ export function PartnerCarousel({ backgroundColor = "bg-secondary/30" }: Partner
     { name: "HC BIOLOGICS", logo: "/logos/hcbiologics_logo.png" },
     { name: "SCIENCE MEDIC", logo: "/logos/Science_Medic.png" },
     { name: "GESCO", logo: "/logos/gesco_logo.png" },
+    { name: "HONGHU", logo: "/logos/hon_p.png" },
   ]
 
   const duplicatedPartners = [...partners, ...partners, ...partners, ...partners, 
