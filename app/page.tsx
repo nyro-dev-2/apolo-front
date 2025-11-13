@@ -242,10 +242,10 @@ export default function HomePage() {
                   <video 
                     className="w-full h-full object-cover"
                     controls
-                    poster="/video-thumbnail.webp"
+                    poster="/video-thumb.webp"
                     preload="metadata"
                   >
-                    <source src="/videos/presentation.mp4" type="video/mp4" />
+                    <source src="/videos/presentationvid.mp4" type="video/mp4" />
                     Tu navegador no soporta la reproducción de video.
                   </video>
                 </div>
