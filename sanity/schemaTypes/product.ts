@@ -79,8 +79,8 @@ export default defineType({
   preview: {
     select: {
       title: "name",
-      subtitle: "category->title",
-      media: "images.0",
+      subtitle: "category.title",
+      media: "images.0.asset",
     },
   },
 })

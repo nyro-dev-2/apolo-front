@@ -41,16 +41,6 @@ const PRODUCTS_QUERY = `
 } | order(name asc)
 `
 
-const PRODUCT_CATEGORY_INFO: Array<{
-  id: string
-  label: string
-  description?: string
-}> = [
-  { id: "neurocirugia", label: "Neurocirugía" },
-  { id: "columna", label: "Columna" },
-  { id: "accesorios", label: "Accesorios" },
-]
-
 const CATEGORIES_QUERY = `
   *[_type == "category"]{
     "id": coalesce(slug.current, _id),
@@ -74,15 +64,6 @@ type CategorySummary = {
 
 function buildCategorySummaries(list: Product[], categories: CategoryDocument[]): CategorySummary[] {
   const categoriesMap = new Map<string, CategorySummary>()
-
-  PRODUCT_CATEGORY_INFO.forEach((category) => {
-    categoriesMap.set(category.id, {
-      id: category.id,
-      label: category.label,
-      description: category.description,
-      count: 0,
-    })
-  })
 
   categories.forEach((category) => {
     categoriesMap.set(category.id, {
